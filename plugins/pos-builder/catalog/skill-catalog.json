@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "catalog_version": "2026-04-23",
+  "notes_ru": [
+    "status=shipped означает: скилл реально входит в текущий bundle.",
+    "Каталог в этом clean dist repo содержит только реально включённые рабочие скиллы."
+  ],
+  "runtime_home": {
+    "env_var": "POS_HOME",
+    "default_path": "~/.pos-builder",
+    "shared_state_files": [
+      "learner-state.json",
+      "my-architecture.md",
+      "my-system.md"
+    ]
+  },
+  "skills": [
+    {
+      "slug": "pos-intro",
+      "name": "POS Intro",
+      "name_ru": "Вводная POS-builder",
+      "command": "/pos-intro",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "runtime",
+      "bundle_path": "skills/pos-intro/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-intro`, asks where to start, asks what this course is, or needs the short entry handoff into `/pos-diagnostic`.",
+      "state_branch": "arch_blocks.intro",
+      "primary_use_case_id": null,
+      "related_block_ids": [],
+      "prereq_skills": []
+    },
+    {
+      "slug": "pos-diagnostic",
+      "name": "POS Diagnostic",
+      "name_ru": "Диагностика POS-builder",
+      "command": "/pos-diagnostic",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "diagnostic",
+      "bundle_path": "skills/pos-diagnostic/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-diagnostic`, asks to start the POS course, or needs the first route-building interview.",
+      "state_branch": null,
+      "primary_use_case_id": null,
+      "related_block_ids": [],
+      "prereq_skills": []
+    },
+    {
+      "slug": "pos-stt-setup",
+      "name": "POS STT Setup",
+      "name_ru": "Голосовой ввод",
+      "command": "/pos-stt-setup",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "capability",
+      "bundle_path": "skills/pos-stt-setup/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-stt-setup`, asks to set up voice input, or needs a speech-to-text tool before later POS blocks.",
+      "state_branch": "top_level.stt_status",
+      "primary_use_case_id": 104,
+      "related_block_ids": [
+        51
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-vps",
+      "name": "POS VPS",
+      "name_ru": "Фундамент: VPS",
+      "command": "/pos-vps",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "foundation",
+      "bundle_path": "skills/pos-vps/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-vps`, asks to set up a server, or needs the infrastructure foundation for always-on POS automations.",
+      "state_branch": "arch_blocks.vps_foundation",
+      "primary_use_case_id": 1,
+      "related_block_ids": [
+        1,
+        2,
+        3
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-vault",
+      "name": "POS Vault",
+      "name_ru": "Obsidian vault",
+      "command": "/pos-vault",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "foundation",
+      "bundle_path": "skills/pos-vault/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-vault`, asks to set up Obsidian, or needs the shared storage layer for the rest of the POS.",
+      "state_branch": "arch_blocks.obsidian_vault",
+      "primary_use_case_id": 2,
+      "related_block_ids": [
+        100
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-github-setup",
+      "name": "POS GitHub Setup",
+      "name_ru": "GitHub для курса",
+      "command": "/pos-github-setup",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "runtime",
+      "bundle_path": "skills/pos-github-setup/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-github-setup`, asks to set up GitHub for the course, or needs issue-based course memory before later build steps.",
+      "state_branch": "arch_blocks.github_setup",
+      "primary_use_case_id": 9,
+      "related_block_ids": [
+        20,
+        101
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-calendar",
+      "name": "POS Calendar",
+      "name_ru": "Календарь",
+      "command": "/pos-calendar",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "adapter",
+      "bundle_path": "skills/pos-calendar/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-calendar`, asks to connect a calendar, or needs calendar read and write access for later brief and planning skills.",
+      "state_branch": "arch_blocks.calendar",
+      "primary_use_case_id": 7,
+      "related_block_ids": [
+        30
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-email",
+      "name": "POS Email",
+      "name_ru": "Почта",
+      "command": "/pos-email",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "adapter",
+      "bundle_path": "skills/pos-email/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-email`, asks to connect an email account, or needs email read and cautious write flows inside POS.",
+      "state_branch": "arch_blocks.email",
+      "primary_use_case_id": 111,
+      "related_block_ids": [
+        31
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-telegram",
+      "name": "POS Telegram",
+      "name_ru": "Telegram",
+      "command": "/pos-telegram",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "adapter",
+      "bundle_path": "skills/pos-telegram/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-telegram`, asks to connect Telegram, or needs a narrow Telegram bridge for inbox and automation work.",
+      "state_branch": "arch_blocks.telegram",
+      "primary_use_case_id": 4,
+      "related_block_ids": [
+        32
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-tasks",
+      "name": "POS Tasks",
+      "name_ru": "Задачи и проекты",
+      "command": "/pos-tasks",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "capability",
+      "bundle_path": "skills/pos-tasks/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-tasks`, asks to connect a task tracker, or needs one task system as the agent-memory home.",
+      "state_branch": "arch_blocks.tasks",
+      "primary_use_case_id": 8,
+      "related_block_ids": [
+        38
+      ],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
+    },
+    {
+      "slug": "pos-basic-vibecoding",
+      "name": "POS Basic Vibecoding",
+      "name_ru": "Базовый вайбкодинг",
+      "command": "/pos-basic-vibecoding",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "capability",
+      "bundle_path": "skills/pos-basic-vibecoding/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-basic-vibecoding`, asks to learn vibe coding, or needs the first guided coding rehearsal before custom POS tools.",
+      "state_branch": "arch_blocks.basic_vibecoding",
+      "primary_use_case_id": 108,
+      "related_block_ids": [
+        2,
+        20,
+        101
+      ],
+      "prereq_skills": [
+        "pos-diagnostic",
+        "pos-github-setup"
+      ]
+    },
+    {
+      "slug": "pos-goals",
+      "name": "POS Goals",
+      "name_ru": "Жизненные цели",
+      "command": "/pos-goals",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "alignment",
+      "bundle_path": "skills/pos-goals/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-goals`, asks to capture life goals, or needs a stable goals anchor for later prioritization and brief skills.",
+      "state_branch": "arch_blocks.goals",
+      "primary_use_case_id": 114,
+      "related_block_ids": [
+        20,
+        100
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-morning-brief",
+      "name": "POS Morning Brief",
+      "name_ru": "Утренний бриф",
+      "command": "/pos-morning-brief",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": "skills/pos-morning-brief/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-morning-brief`, asks for a morning brief, or wants scheduled daily planning from connected sources.",
+      "state_branch": "arch_blocks.morning_brief",
+      "primary_use_case_id": 100,
+      "related_block_ids": [
+        60,
+        20
+      ],
+      "prereq_skills": [
+        "pos-goals",
+        "pos-calendar",
+        "pos-tasks"
+      ]
+    },
+    {
+      "slug": "pos-day-summary",
+      "name": "POS Day Summary",
+      "name_ru": "Итоги дня",
+      "command": "/pos-day-summary",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": "skills/pos-day-summary/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-day-summary`, asks to close the day, or wants plan-versus-actual reflection and an evening close workflow.",
+      "state_branch": "arch_blocks.day_summary",
+      "primary_use_case_id": 6,
+      "related_block_ids": [
+        60,
+        20
+      ],
+      "prereq_skills": [
+        "pos-goals",
+        "pos-calendar",
+        "pos-tasks"
+      ]
+    },
+    {
+      "slug": "pos-triage",
+      "name": "POS Triage",
+      "name_ru": "Триаж",
+      "command": "/pos-triage",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": "skills/pos-triage/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-triage`, asks for a now-versus-later ranking, or wants one short priority view across connected channels.",
+      "state_branch": "arch_blocks.triage",
+      "primary_use_case_id": 112,
+      "related_block_ids": [
+        20,
+        38
+      ],
+      "prereq_skills": [
+        "pos-goals",
+        "pos-telegram",
+        "pos-calendar"
+      ]
+    },
+    {
+      "slug": "pos-dashboard",
+      "name": "POS Dashboard",
+      "name_ru": "Персональный дашборд",
+      "command": "/pos-dashboard",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": "skills/pos-dashboard/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-dashboard`, asks for one status screen, or wants a dashboard that reads existing POS blocks without becoming a second source of truth.",
+      "state_branch": "arch_blocks.dashboard",
+      "primary_use_case_id": 12,
+      "related_block_ids": [
+        20
+      ],
+      "prereq_skills": [
+        "pos-vault",
+        "pos-github-setup"
+      ]
+    },
+    {
+      "slug": "pos-advisors",
+      "name": "POS Advisors",
+      "name_ru": "Персональные советники",
+      "command": "/pos-advisors",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": "skills/pos-advisors/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-advisors`, asks to build advisor personas, or wants a small grounded advisory panel for a live decision.",
+      "state_branch": "arch_blocks.pos_advisors",
+      "primary_use_case_id": 107,
+      "related_block_ids": [
+        20,
+        100
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-observability",
+      "name": "POS Observability",
+      "name_ru": "Наблюдаемость",
+      "command": "/pos-observability",
+      "status": "shipped",
+      "availability_ru": "Системный",
+      "menu_visible": false,
+      "kind": "cross_cutting",
+      "bundle_path": "skills/pos-observability/SKILL.md",
+      "menu_description": "Use when another POS skill needs the observability gate for a scheduled workflow.",
+      "state_branch": "invoking_block.observability",
+      "primary_use_case_id": null,
+      "related_block_ids": [
+        60,
+        61
+      ],
+      "prereq_skills": []
+    }
+  ]
+}

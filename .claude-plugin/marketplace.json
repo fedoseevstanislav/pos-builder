@@ -1,0 +1,21 @@
+{
+  "name": "pos-builder-dev",
+  "owner": {
+    "name": "Stanislav Fedoseev"
+  },
+  "metadata": {
+    "description": "Local clean preview marketplace for the POS-builder skill bundle.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "pos-builder",
+      "description": "POS-builder teaching skills for assembling a personal AI operating system.",
+      "version": "0.1.0",
+      "source": "./plugins/pos-builder",
+      "author": {
+        "name": "Stanislav Fedoseev"
+      }
+    }
+  ]
+}

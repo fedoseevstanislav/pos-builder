@@ -1,0 +1,9 @@
+{
+  "name": "pos-builder",
+  "version": "0.1.0",
+  "description": "POS-builder teaching skills for assembling a personal AI operating system.",
+  "skills": "./skills/",
+  "author": {
+    "name": "Stanislav Fedoseev"
+  }
+}

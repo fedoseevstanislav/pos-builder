@@ -1,0 +1,20 @@
+{
+  "name": "pos-builder-dev",
+  "interface": {
+    "displayName": "POS Builder"
+  },
+  "plugins": [
+    {
+      "name": "pos-builder",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pos-builder"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

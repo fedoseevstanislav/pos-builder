@@ -1,0 +1,31 @@
+{
+  "version": "1.0",
+  "description": "Cross-cutting observability gate. Every scheduled UC skill must satisfy this contract before marking status: done.",
+  "required_for_status_done": {
+    "health_check": {
+      "type": "systemd_timer | http_probe | cron_check",
+      "description": "Periodic check that the pipeline is alive and producing expected output.",
+      "interval_seconds": 900,
+      "validation_rule": "exit 0 within last 2 intervals"
+    },
+    "alert_channel": {
+      "type": "telegram | email | log",
+      "target": "<chat_id | address | path>",
+      "description": "Where the learner gets notified when something breaks.",
+      "on_conditions": [
+        "failure_streak >= 3",
+        "timer_missed >= 1"
+      ]
+    },
+    "retry_policy": {
+      "strategy": "exponential_backoff | fixed | none",
+      "max_retries": 5,
+      "base_delay_seconds": 60,
+      "description": "How the pipeline handles transient failures. Always bounded."
+    },
+    "sla_uptime_target": 0.95,
+    "log_retention_days": 30
+  },
+  "enforcement": "hard_refuse",
+  "enforcement_description": "Scheduled UC skill cannot transition to status: done if any required field is missing from arch_blocks.<name>.observability. Warn at partial, block at done."
+}

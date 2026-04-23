@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="POS Builder">
+  <rect width="128" height="128" rx="28" fill="#0A7C66"/>
+  <path d="M28 30h44c15 0 25 10 25 24 0 15-10 25-25 25H46v19H28V30zm18 16v18h24c6 0 10-4 10-9 0-6-4-9-10-9H46z" fill="#F7F4E8"/>
+  <path d="M90 98 72 76h16l14 22H90z" fill="#F7F4E8"/>
+</svg>

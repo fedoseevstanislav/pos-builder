@@ -1,0 +1,37 @@
+{
+  "name": "pos-builder",
+  "version": "0.1.0",
+  "description": "POS-builder teaching skills for assembling a personal AI operating system.",
+  "author": {
+    "name": "Stanislav Fedoseev"
+  },
+  "license": "UNLICENSED",
+  "keywords": [
+    "education",
+    "skills",
+    "personal-os",
+    "course"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "POS Builder",
+    "shortDescription": "Guided POS-builder lessons for Claude and Codex learners.",
+    "longDescription": "Bundle of guided teaching skills that help a learner assemble a personal AI operating system step by step: diagnostic, storage, adapters, workflows, and course runtime setup.",
+    "developerName": "Stanislav Fedoseev",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Start the POS course with the diagnostic interview.",
+      "Set up one POS block such as vault, calendar, or goals.",
+      "Continue the learner's next POS step from saved state."
+    ],
+    "brandColor": "#0A7C66",
+    "composerIcon": "./assets/pos-builder.svg",
+    "logo": "./assets/pos-builder.svg",
+    "screenshots": []
+  }
+}
