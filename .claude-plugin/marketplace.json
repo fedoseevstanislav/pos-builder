@@ -1,10 +1,10 @@
 {
-  "name": "pos-builder-dev",
+  "name": "pos-builder",
   "owner": {
     "name": "Stanislav Fedoseev"
   },
   "metadata": {
-    "description": "Local clean preview marketplace for the POS-builder skill bundle.",
+    "description": "Public marketplace for the POS Builder plugin bundle.",
     "version": "0.1.0"
   },
   "plugins": [

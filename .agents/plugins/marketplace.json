@@ -1,5 +1,5 @@
 {
-  "name": "pos-builder-dev",
+  "name": "pos-builder",
   "interface": {
     "displayName": "POS Builder"
   },
