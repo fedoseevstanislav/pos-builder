@@ -24,6 +24,13 @@ Keep the pace calm and narrow. The learner should feel that each step is underst
 5. Persona review is diff-first. Show the draft or the diff, ask what feels off, rerun only the flagged part or drop the line, and save only after explicit approval.
 6. After a pause or completion branch, only repeat the farewell and the resume command.
 
+## Learner feedback protocol
+
+- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
+- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
+- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
+- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
+
 ## Data dependencies
 
 - Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner project CWD.
@@ -683,4 +690,5 @@ Action (silent):
 - If any check fails, keep `status: "in_progress"`, say one short Russian line naming the exact first gap, and route back to the first missing artifact.
 - If all pass, write `status: "completed"`.
 
+Say: `«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
 Say: `«Готово. У тебя есть готовые карточки и первый консилиум по живому вопросу. В строке `_DECIDE_:` я оставил место под твой выбор. Когда захочешь новый вопрос или нового советника, снова запусти `/pos-advisors`.»`

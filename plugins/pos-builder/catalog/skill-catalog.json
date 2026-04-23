@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "catalog_version": "2026-04-23",
+  "feedback_repo": "fedoseevstanislav/pos-builder",
   "notes_ru": [
     "status=shipped означает: скилл реально входит в текущий bundle.",
     "Каталог в этом clean dist repo содержит только реально включённые рабочие скиллы."
@@ -322,6 +323,22 @@
         "pos-telegram",
         "pos-calendar"
       ]
+    },
+    {
+      "slug": "pos-feedback",
+      "name": "POS Feedback",
+      "name_ru": "Обратная связь",
+      "command": "/pos-feedback",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "runtime",
+      "bundle_path": "skills/pos-feedback/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-feedback`, asks to leave feedback, or wants the agent to draft and post a privacy-safe GitHub issue.",
+      "state_branch": "arch_blocks.feedback",
+      "primary_use_case_id": null,
+      "related_block_ids": [],
+      "prereq_skills": []
     },
     {
       "slug": "pos-dashboard",

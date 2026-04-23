@@ -33,6 +33,13 @@ The agent is a collaborator on real work. It reads context from the learner's ta
 12. The only non-numeric learner replies allowed by default are path / reason / custom-label answers and the explicit opt-out words named in the relevant phase.
 13. After pause and handoff branches, do not reopen the conversation except to repeat the farewell and the resume command.
 
+## Learner feedback protocol
+
+- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
+- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
+- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
+- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
+
 ## Data dependencies
 
 - Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner project CWD.
@@ -1006,6 +1013,12 @@ Say: `«Остановимся здесь. Когда будешь готов п
 
 Action (silent, no learner output):
 - Hand off to the recommended next skill.
+
+## Learner feedback close reminder
+
+Перед финальным Check или прощанием этого блока добавь расширенное напоминание:
+`«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
+Если ученик откликается, предложи свободно описать ситуацию и дальше переведи его в `/pos-feedback`-flow.
 
 ## References
 

@@ -38,6 +38,13 @@ description: >-
 15. Every external-dependency `Build:` needs an explicit failure path in plain Russian: what broke, what we can do next, and where the evidence lives.
 16. After a farewell branch, only repeat the farewell and the resume command.
 
+## Learner feedback protocol
+
+- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
+- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
+- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
+- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
+
 ## Data dependencies
 
 - Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner project CWD.
@@ -818,6 +825,12 @@ Say: `«Остановимся здесь. Когда захочешь что-т
 
 
 **State written:** final `arch_blocks.morning_brief` object with `status: "done"`, `completed_at`, and all fields populated from the earlier phases.
+
+## Learner feedback close reminder
+
+Перед финальным Check или прощанием этого блока добавь расширенное напоминание:
+`«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
+Если ученик откликается, предложи свободно описать ситуацию и дальше переведи его в `/pos-feedback`-flow.
 
 ## References
 

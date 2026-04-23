@@ -39,6 +39,13 @@ description: >-
 - Прямой вызов: `/pos-email`
 - Хэндофф из `pos-diagnostic`
 
+## Learner feedback protocol
+
+- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
+- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
+- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
+- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
+
 ## Data dependencies
 
 - Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner project CWD.
@@ -1414,6 +1421,12 @@ Check: «Идём туда сейчас или пауза?»
 2. Backup format — JSON vs MBOX. **Default to JSON for MVP parity with calendar.**
 3. Multi-account — MVP is single-mailbox. Multi-account deferred to v1.
 4. Diagnostic amendment — add email zone to `use-case-checklist.md` vs discover in-skill. **Discover in-skill** (mirrors calendar); amendment is a separate issue.
+
+## Learner feedback close reminder
+
+Перед финальным Check или прощанием этого блока добавь расширенное напоминание:
+`«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
+Если ученик откликается, предложи свободно описать ситуацию и дальше переведи его в `/pos-feedback`-flow.
 
 ## References
 

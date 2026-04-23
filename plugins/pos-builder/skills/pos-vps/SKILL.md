@@ -42,6 +42,13 @@ Apply throughout ALL phases. The rules in this file are the runtime contract for
 15. **One mental model per Say, with a Check.** Never stack two MMs in one turn.
 16. **Proof before choice.** Provider selection: show matrix + tradeoffs BEFORE asking to pick.
 
+## Learner feedback protocol
+
+- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
+- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
+- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
+- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
+
 ## Data dependencies
 
 - Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner project CWD.
@@ -743,6 +750,12 @@ After the learner answers the final Check, stop immediately and end with:
 ```
 
 ---
+
+## Learner feedback close reminder
+
+Перед финальным Check или прощанием этого блока добавь расширенное напоминание:
+`«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
+Если ученик откликается, предложи свободно описать ситуацию и дальше переведи его в `/pos-feedback`-flow.
 
 ## References
 

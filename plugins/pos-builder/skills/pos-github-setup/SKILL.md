@@ -39,6 +39,13 @@ Keep the pace calm and narrow. Derive each new word from something the learner a
 - Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner's project current working directory.
 - Resolve the bundled runtime catalog from the distributed plugin copy when it helps disambiguate shipped skill names. In Claude plugin installs prefer `${CLAUDE_PLUGIN_ROOT}/catalog/skill-catalog.json`. In other bundled installs use `../../catalog/skill-catalog.json` relative to this skill directory. In the authoring repo use `../../plugins/pos-builder/catalog/skill-catalog.json` relative to this skill directory.
 
+## Learner feedback protocol
+
+- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
+- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
+- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
+- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
+
 ## Data dependencies
 
 - `learner-state.json` in `POS_HOME`. Read on entry for resume, `complete`, and existing `arch_blocks`.
@@ -745,6 +752,12 @@ Say: `«Если захочешь вернуться сюда позже, зап
 
 
 **State written:** final seal only: `status: "done"` and `completed_at`.
+
+## Learner feedback close reminder
+
+Перед финальным Check или прощанием этого блока добавь расширенное напоминание:
+`«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
+Если ученик откликается, предложи свободно описать ситуацию и дальше переведи его в `/pos-feedback`-flow.
 
 ## References
 
