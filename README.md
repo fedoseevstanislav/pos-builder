@@ -65,36 +65,36 @@ codex plugin marketplace add fedoseevstanislav/pos-builder
 
 ### Старт
 
-- `POS Intro` — коротко объясняем, что это за курс и как по нему идти.
-- `POS Diagnostic` — собираем твой контекст и определяем, с чего лучше начать именно тебе.
-- `POS STT Setup` — с агентами удобно работать голосом. Настраиваем преобразование голоса в текст.
+- `POS Intro` — коротко объяснит, что это за курс и как по нему идти.
+- `POS Diagnostic` — проведёт короткое интервью и поможет определить, с чего тебе лучше начать.
+- `POS STT Setup` — с агентами удобно работать голосом, поможет настроить преобразование голоса в текст.
 
 ### Фундамент
 
-- `POS VPS` — поднимаем сервер, чтобы агенты могли работать в режиме 24/7.
-- `POS Vault` — настраиваем Obsidian Vault как единое хранилище для всей информации твоей Personal OS.
-- `POS GitHub Setup` — создаём GitHub-аккаунт, настраиваем хранение кода и автоматизаций и рабочую память агентов через GitHub Issues (задачи).
+- `POS VPS` — создание сервера, чтобы агенты могли работать в режиме 24/7.
+- `POS Vault` — настройка Obsidian Vault как единого хранилища для всей информации твоей Personal OS.
+- `POS GitHub Setup` — создание GitHub-аккаунта, настройка хранения кода, автоматизаций и рабочей памяти агентов через GitHub Issues.
 
 ### Подключение каналов и систем
 
-- `POS Calendar` — даём агенту доступ к календарю.
-- `POS Email` — даём агенту доступ к почте.
-- `POS Telegram` — даём агенту доступ к Telegram.
-- `POS Tasks` — даём агенту доступ к системе учёта задач.
+- `POS Calendar` — подключение календаря.
+- `POS Email` — подключение e-mail.
+- `POS Telegram` — подключение Telegram.
+- `POS Tasks` — подключение к системе учёта задач.
 
 ### Навыки и рабочие ритуалы
 
-- `POS Basic Vibecoding` — обучаем базовым принципам и практикам вайбкодинга и сразу применяем их, чтобы создать свой первый скилл.
-- `POS Goals` — выявляем и сохраняем цели в разных областях жизни, чтобы агенты понимали, к чему тебе важно двигаться.
-- `POS Morning Brief` — настраиваем автоматический утренний бриф: план на день на основе подключённых данных.
-- `POS Day Summary` — настраиваем автоматическую процедуру закрытия дня: короткую ретроспективу по итогам дня.
-- `POS Triage` — создаём скилл, который помогает беречь внимание и быстро понимать, что сейчас важнее всего.
+- `POS Basic Vibecoding` — обучение базовым принципам и практикам вайбкодинга, создание первого скилла.
+- `POS Goals` — описание целей в разных областях жизни, чтобы агенты понимали, к чему важно двигаться.
+- `POS Morning Brief` — настройка автоматического утреннего брифа: плана на день на основе подключённых данных.
+- `POS Day Summary` — настройка автоматической процедуры закрытия дня: короткой ретроспективы по итогам дня.
+- `POS Triage` — создание скилла, который помогает беречь внимание и быстро понимать, что сейчас важнее всего.
 
 ### Дополнительные блоки
 
-- `POS Dashboard` — собираем личную панель управления нашим вниманием.
-- `POS Advisors` — создаём персональный совет экспертов, которые помогают нам принимать решения.
-- `POS Observability` — настраиваем контроль за автоматизациями, чтобы вовремя замечать сбои и проблемы.
+- `POS Dashboard` — создание панели управления.
+- `POS Advisors` — создание персонального совета экспертов, который помогает принимать решения.
+- `POS Observability` — настройка контроля за автоматизациями.
 
 ### Обратная связь
 
@@ -151,36 +151,36 @@ Then open `/plugins`, install `POS Builder`, start a new thread, and open `POS I
 
 ### Getting Started
 
-- `POS Intro` — we briefly explain what this course is and how to move through it.
-- `POS Diagnostic` — we gather your context and decide what makes the most sense for you to do first.
-- `POS STT Setup` — working with agents by voice is often easier. We set up speech-to-text.
+- `POS Intro` — a short explanation of what this course is and how to move through it.
+- `POS Diagnostic` — a short interview that helps determine where to start.
+- `POS STT Setup` — helps set up speech-to-text so working with agents by voice is easier.
 
 ### Foundation
 
-- `POS VPS` — we set up a server so agents can work 24/7.
-- `POS Vault` — we set up Obsidian Vault as the single place for all information in your Personal OS.
-- `POS GitHub Setup` — we create a GitHub account, set up code and automation storage, and give agents working memory through GitHub Issues.
+- `POS VPS` — creating a server so agents can work 24/7.
+- `POS Vault` — setting up Obsidian Vault as the single storage place for all information in your Personal OS.
+- `POS GitHub Setup` — creating a GitHub account and setting up storage for code, automations, and agent working memory through GitHub Issues.
 
 ### Connecting Channels and Systems
 
-- `POS Calendar` — we give the agent access to your calendar.
-- `POS Email` — we give the agent access to your email.
-- `POS Telegram` — we give the agent access to Telegram.
-- `POS Tasks` — we give the agent access to your task system.
+- `POS Calendar` — connecting a calendar.
+- `POS Email` — connecting e-mail.
+- `POS Telegram` — connecting Telegram.
+- `POS Tasks` — connecting a task-tracking system.
 
 ### Skills and Routines
 
-- `POS Basic Vibecoding` — we teach the basic principles and practices of vibecoding and apply them right away to create your first skill.
-- `POS Goals` — we identify and save goals across life areas so agents understand what matters to you.
-- `POS Morning Brief` — we set up an automatic morning brief: a plan for the day based on connected data.
-- `POS Day Summary` — we set up an automatic end-of-day routine: a short daily retrospective.
-- `POS Triage` — we create a skill that helps protect your attention and quickly understand what matters most right now.
+- `POS Basic Vibecoding` — learning the basic principles and practices of vibecoding, and creating a first skill.
+- `POS Goals` — describing goals across life areas so agents understand what matters.
+- `POS Morning Brief` — setting up an automatic morning brief: a plan for the day based on connected data.
+- `POS Day Summary` — setting up an automatic end-of-day routine: a short daily retrospective.
+- `POS Triage` — creating a skill that helps protect attention and quickly understand what matters most right now.
 
 ### Additional Blocks
 
-- `POS Dashboard` — we build a personal dashboard for managing our attention.
-- `POS Advisors` — we create a personal council of experts to help us make decisions.
-- `POS Observability` — we set up control over automations so we notice failures and problems in time.
+- `POS Dashboard` — creating a dashboard.
+- `POS Advisors` — creating a personal council of experts that helps with decision-making.
+- `POS Observability` — setting up control over automations.
 
 ### Feedback
 
