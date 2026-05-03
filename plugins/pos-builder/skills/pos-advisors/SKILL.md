@@ -5,470 +5,124 @@ description: >-
   or wants a small grounded advisory panel for a live decision.
 ---
 
-# POS Advisors — Teaching Script
-
-> **Script instructions:** Follow this file exactly. Output every `Say:` line verbatim in Russian. Stop after every `Check:` and wait for the learner. Keep `Action:` silent. Treat each `Build:` block as unbounded execution inside its constraints: research, verify, retry, or stop safely until the completion gate passes. Use English for structure and runtime instructions only. Use Russian only in `Say:` / `Check:` lines and in fixed artifact text that must be written verbatim. The frame is locked; do not reopen frame decisions inside the session.
-
-## Your Role
-
-You are helping the learner assemble a small panel of personal advisors from real public figures. The output is not mysticism and not cosplay. It is a grounded workflow: pick a reading provider, build at least two cited persona cards, then run one real decision through a blind parallel panel.
-
-Keep the pace calm and narrow. The learner should feel that each step is understandable: where the evidence came from, why a quote stayed, why a quote was dropped, and where the final decision still belongs.
-
-## Behavioral rules
-
-1. Inherit the course-wide behavioral principles from [docs/skill-contract.md](../../docs/skill-contract.md). Do not restate its 22 principles here.
-2. Treat the locked frame as non-negotiable. Do not reopen end state, panel bounds, section schema, or the `_DECIDE_:` placeholder rule. Runtime-resolved provider order and vault paths are allowed where the frame below explicitly permits them.
-3. Keep learner-facing text in Russian and runtime instructions in English only.
-4. Research before asserting. Claims need a resolving URL plus a verbatim supporting excerpt. Voice examples are verbatim or dropped.
-5. Persona review is diff-first. Show the draft or the diff, ask what feels off, rerun only the flagged part or drop the line, and save only after explicit approval.
-6. After a pause or completion branch, only repeat the farewell and the resume command.
-
-## Learner feedback protocol
-
-- В начале блока (в первых 1-2 репликах) добавь короткое напоминание: `«В любой момент этого блока можешь сказать, что хочешь оставить фидбек.»`
-- Если ученик звучит растерянно, застрял, недоволен, особенно доволен или хочет, чтобы что-то было иначе, предложи: `«Если хочешь, я могу подготовить фидбек для создателей. Просто опиши свободно, что произошло.»`
-- Если ученик откликается посреди блока, не обещай бесшовный хэндофф и автоматическое возвращение в текущую фазу.
-- Предложи безопасный выбор: либо дойти до ближайшей паузы и потом оформить фидбек, либо остановиться и отдельно открыть `/pos-feedback`. Если уходите в `/pos-feedback` сразу, прямо скажи, что к этому блоку потом вернётесь отдельным запуском.
-
-## Data dependencies
-
-- Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. Throughout this skill, any mention of `learner-state.json`, `my-architecture.md`, or `my-system.md` means the copy inside `POS_HOME`, not the learner project CWD.
-- `learner-state.json` in `POS_HOME`. Read on entry for `complete`, prerequisite blocks, and any existing `arch_blocks.pos_advisors` branch. Write only to `arch_blocks.pos_advisors`.
-- The learner's project agent-config file in the current working directory — `CLAUDE.md` for Claude Code or `AGENTS.md` for Codex — plus the sibling file only if `learner_profile.keep_agent_configs_in_sync == true`. Read the required target set before provider verification; write only after explicit acceptance of the rules-of-use diff.
-- The learner-approved advisor-card directory inside their vault. Course default: `<vault>/Personas/` when the vault root is the standard course path.
-- The learner-approved decisions directory inside their vault. Course default: `<vault>/Decisions/`.
-- CLI wrappers, if present, for research/search. Common examples today: `~/bin/brave-search`, `~/bin/parallel-search`, `~/bin/parallel-research`, optional `~/bin/exa`.
-- Any runtime MCP surfaces that expose web search or research.
-- Built-in WebSearch as the final fallback tier.
-- [docs/skill-contract.md](../../docs/skill-contract.md) — normative course contract.
-- [docs/block-runtime-pattern.md](../../docs/block-runtime-pattern.md) — simplicity and friction-reduction reference.
-- [docs/methods/grounded-extraction.md](../../docs/methods/grounded-extraction.md) — methodology reference for persona extraction. Link here instead of duplicating its rationale.
-- [skills/pos-vault/SKILL.md](../pos-vault/SKILL.md) — hard prerequisite artifact home; do not reopen its teaching flow here.
-- [skills/pos-basic-vibecoding/SKILL.md](../pos-basic-vibecoding/SKILL.md) — soft prerequisite context only; do not reopen its teaching flow here.
-
-## State contract
-
-This skill writes only `arch_blocks.pos_advisors`. Partial state is valid while the skill is in flight. Every write must include `schema_version: "1.0"` and recompute `counters`.
-
-This means: every `Action (silent):` or `Build (narrated):` block that touches `arch_blocks.pos_advisors` must carry `schema_version: "1.0"` in the narrated write — including partial writes during in-flight phases. It is not a branch-seed-only field. If you drop it on any write after the first, the state is non-conforming.
-
-```json
-{
-  "arch_blocks": {
-    "pos_advisors": {
-      "schema_version": "1.0",
-      "status": "in_progress | completed | skipped",
-      "provider": {
-        "tier": "cli | mcp | builtin",
-        "name": "<live provider/tool name>",
-        "verified_at": "2026-04-20T14:30:00Z",
-        "rules_of_use_written": true
-      },
-      "prereq_overrides": {
-        "pos_basic_vibecoding": false,
-        "pos_vault": false
-      },
-      "expectations_acked_at": "2026-04-20T14:25:00Z",
-      "personas": [
-        {
-          "slug": "steve-jobs",
-          "status": "draft | finalized",
-          "path": "<PERSONA_ROOT>/steve-jobs.md",
-          "authored_at": "2026-04-20T15:10:00Z",
-          "last_finalized_at": "2026-04-20T15:40:00Z"
-        }
-      ],
-      "decisions": [
-        {
-          "slug": "switch-vpn-provider",
-          "date": "2026-04-20",
-          "path": "<DECISION_ROOT>/2026-04-20-switch-vpn-provider.md",
-          "advisors": ["steve-jobs", "naval-ravikant"],
-          "decision_filled": false
-        }
-      ],
-      "counters": {
-        "personas_finalized": 0,
-        "decisions_authored": 0
-      }
-    }
-  }
-}
-```
-
-Invariants:
-
-- `status == "completed"` requires all of: a verified provider, `rules_of_use_written == true` for the required agent-config target set, `counters.personas_finalized >= 2`, `counters.decisions_authored >= 1`, at least two verified persona files on disk, and at least one decision doc on disk with the required sections plus `_DECIDE_:`.
-- `provider` always reflects the currently active tier. A fallback is logged by rewriting `provider.tier` and `provider.name` on the next state write.
-- `personas[].path` must always stay inside the learner-approved advisor-card directory.
-- `personas[].status == "finalized"` is set only after the on-disk persona file exists, contains all seven required sections, and passes the G4 minimums.
-- `decisions[].path` must always stay inside the learner-approved decisions directory.
-- `personas[]` and `decisions[]` are append-only arrays from this skill's point of view. Update item fields when needed; do not delete, reorder, or replace earlier entries.
-- `counters.personas_finalized` is the count of entries whose current `status == "finalized"`.
-- `counters.decisions_authored` is the count of entries in `decisions[]`.
-- `status: "skipped"` is reserved for an explicit learner choice to stop before provider verification or before the first persona draft. Ordinary pauses keep `status: "in_progress"`.
+Read this file on entry. Constraints and end state define the boundaries; flow guides the session.
 
-## Mental models taught
+Resolve `POS_HOME` once on entry: use `$POS_HOME` if it is set, otherwise `~/.pos-builder`. All references to `learner-state.json` mean the copy inside `POS_HOME`.
 
-1. **`llm-distillation` (MM1, new).** LLM может быстро пройти по большому корпусу и вытащить суть, так что мысль «я всё это не успею прочитать» перестаёт быть жёстким ограничением.
-2. **`persona-from-corpus` (MM2, new).** Публичных материалов с опорой на источники достаточно, чтобы собрать рабочую модель того, как человек думает, даже если это не сам человек.
-3. **`advisor-not-verdict` (MM3, new).** Советники расширяют набор углов зрения, но финальное решение всё равно остаётся у ученика.
-4. **`research-provider-saves-context` (MM4, new).** Отдельные исследовательские инструменты могут забрать на себя грубое чтение и оставить основной контекст диалога на синтез и решение.
+**Role:** Help the learner assemble a small panel of personal advisors from real public figures. The output is grounded: pick a research provider, build cited persona cards, run a real decision through a blind parallel panel. Keep the pace calm. The learner should see where the evidence came from, why a quote stayed or was dropped, and that the final decision always belongs to them.
 
-## Resume Logic
+## End state
 
-On every `/pos-advisors` invocation, read `learner-state.json` first and branch in this order:
+When done, the learner has:
 
-1. If `learner-state.json` is missing:
-   - Say: `«Этому блоку проще с `learner-state.json`, но можем и без него. Тогда оба пререквизита считаю непроверенными и спрошу явное подтверждение.»`
-   - Check: `«Что выбираешь: 1 сначала пройти `/pos-diagnostic`, 2 идти дальше с явными подтверждениями?»`
-   - `1` -> Say: `«Окей. Сначала пройди `/pos-diagnostic`, потом вернись сюда командой `/pos-advisors`.»`
-   - `2` -> continue at Phase 0 with an empty in-memory state branch and both prereqs treated as unverified.
+1. A verified research provider with a runtime fallback ladder (CLI > MCP > built-in WebSearch)
+2. At least two finalized persona cards saved in the vault's advisor-card directory (resolved from vault agent-config, default `Personas/`), each passing G4 minimums
+3. At least one decision doc saved in the vault's decisions directory (resolved from vault agent-config, default `Decisions/`), with per-advisor takes, consensus, disagreements, and an empty `_DECIDE_:` placeholder — produced via blind parallel panel run (each advisor isolated, same brief, no cross-visibility)
+4. A standalone advisors-council skill created, registered in the agent runtime, committed to git (pushed to GitHub if `github_setup` done)
+5. `learner-state.json` updated (see State)
 
-2. If `arch_blocks.pos_advisors.status == "completed"`:
-   - Say: `«Личные советники уже собраны: провайдер проверен, карточки есть, хотя бы один консилиум сохранён.»`
-   - Check: `«Что делаем: 1 новый консилиум, 2 добавить или обновить персону, 3 выйти?»`
-   - `1` -> jump to Phase 6.
-   - `2` -> jump to Phase 3.
-   - `3` -> Say: `«Остановимся здесь. Когда захочешь вернуться, запусти `/pos-advisors`.»`
+## State
 
-3. If `arch_blocks.pos_advisors` exists and `status != "completed"`:
-   - Resume from the first unmet artifact in this order:
-     - missing prerequisite confirmation or override -> Phase 0
-     - `expectations_acked_at` missing -> Phase 1
-     - `provider` missing or `rules_of_use_written != true` or provider no longer verifies -> Phase 2
-     - fewer than two finalized personas -> Phase 3
-     - two or more finalized personas but no decision doc -> Phase 6
-     - otherwise -> Phase 8 final verification and close
-   - If any `personas[]` entry has `status == "draft"`, read the saved draft from the learner-approved advisor-card directory first and prefer resuming that draft through Phase 4 and Phase 5 before starting a new one. If the file is missing, say so plainly and keep the entry in draft state until the learner decides whether to rebuild it.
-   - Say one short Russian line naming the next artifact, not the phase number.
+Fields in `learner-state.json` under `arch_blocks.pos_advisors`. `last_completed_step` = last finished step; resume from the next one.
 
-4. If there is no `arch_blocks.pos_advisors` branch yet:
-   - Start at Phase 0.
+- `pending_resume` (string|null) -- written on handoff to `/pos-basic-vibecoding`
+- `status` (string: in_progress|completed|skipped) -- written Step 1, Step 2 (on decline), Step 10
+- `last_completed_step` (number) -- written at each step
+- `completed_at` (ISO8601|null) -- written Step 10
+- `expectations_acked_at` (ISO8601|null) -- written Step 2
+- `provider_tier` (string: cli|mcp|builtin) -- written Step 3
+- `provider_name` (string) -- written Step 3
+- `provider_verified_at` (ISO8601) -- written Step 3
+- `persona_root_path` (string) -- written Step 4
+- `decision_root_path` (string) -- written Step 7
+- `personas` (array of `{slug, status, path}`) -- appended/updated Steps 4-6
+- `decisions` (array of `{slug, date, path}`) -- appended Step 8
+- `council_skill_installed` (boolean) -- written Step 9
+- `council_skill_path` (string|null) -- written Step 9
+- `next_refresh_at` (ISO8601|null) -- written Step 10 if the learner opts in
 
-Pause protocol for any phase:
+On entry: read `learner-state.json`. Check `last_completed_step` and resume from the next step. If `status == "completed"`, check `next_refresh_at` — if it is set and the current date is past it, suggest refreshing persona cards before anything else. Otherwise offer: new panel run (Step 7), add/update persona (Step 4), refresh cards, or exit. When the learner chooses to resume, write `status = "in_progress"` and set `last_completed_step` to the step before their chosen entry point.
 
-- Keep `status: "in_progress"` unless the learner explicitly declines the block before provider verification or before the first persona draft.
-- Write only the artifacts completed so far.
-- Say: `«Остановимся здесь. Когда будешь готов продолжить, запусти `/pos-advisors`.»`
+## Mental models
 
-## Behavioral body
+Four models. The intro covers three implicitly; the fourth is taught in Step 3. Write `mental_models_taught.<slug> = { "at": "<ISO8601>", "by_skill": "pos-advisors" }` at the points noted below. If `mental_models_taught.<slug>` already exists, skip silently.
 
-### Phase 0 — Entry probe and prerequisite routing
+1. **`llm-distillation`** (Step 2, implicit in intro; receipt written Step 2)
+2. **`persona-from-corpus`** (Step 2, implicit in intro; contextual explanation in Step 4 before research starts; receipt written Step 2)
+3. **`advisor-not-verdict`** (Step 2, implicit in intro; receipt written Step 2)
+4. **`research-provider-saves-context`** (Step 3) -- Specialized research providers can spend context budget on the reading pass and leave the main conversation budget for synthesis and decisions.
 
-<!-- covers: G1, G3 -->
+## Constraints
 
-**Goal:** protect the block from running before its hard vault home and soft prep surface are checked, while preserving the learner's right to override each one explicitly.
+1. **Advisors suggest, learner decides.** The `_DECIDE_:` line in every decision doc stays empty. If the learner wants the panel to choose for them, decline the block.
+2. **Grounding is non-negotiable.** Every Claim needs a resolving URL plus a verbatim supporting excerpt (primary source, or two corroborating reputable sources). Every Voice quote is verbatim with source URL. If a URL does not resolve or a quote cannot be confirmed, drop it.
+3. **G4 minimums.** Claims >= 3, Voice >= 2, Frameworks >= 1, Domains >= 1, Would-not-say >= 3. At least one of Known reversals or Blind spots must carry evidence. Both sections stay in the card; when one is thin, say so honestly.
+4. **Persona cards stay in the vault.** All cards go into the learner-approved advisor-card directory (resolved from vault agent-config, default `Personas/`). Decision docs go into the vault's decisions directory (same resolution, default `Decisions/`). Never load cards from outside the confirmed directory.
+5. **Research provider tiering.** Detect what is live: CLI wrappers first, then MCP surfaces, then built-in WebSearch as final fallback. Announce the active tier before each heavy pass. If the active tool fails, fall down the ladder and announce.
+6. **Blind parallel panel.** Each advisor run gets the identical decision brief and its own runtime card. No advisor sees another's output. Spawn all runs in one parallel dispatch. If isolated parallel runs are unavailable, stop and say so -- do not simulate serially.
+7. **Present then write.** Persona cards, decision docs, rules-of-use, and agent-config changes: show proposed content, get confirmation, then write. If a file already exists, show a diff first.
+8. **Panel bounds: 2-4 advisors.** Minimum two for meaningful disagreement, maximum four to keep synthesis tractable.
+9. **No secrets in vault or chat.** Research provider API keys and credentials follow the same security boundary as other adapters.
 
-#### Step 0.1 — Read state first
+## Flow
 
-Action (silent): read `learner-state.json` if present. Inspect `arch_blocks.basic_vibecoding.status`, `arch_blocks.obsidian_vault.status`, and any existing `arch_blocks.pos_advisors` branch.
+### Step 1 -- Prerequisites and entry
 
-Action (silent): if the branch does not exist yet, prepare an in-memory branch with:
+Check prerequisites:
+- **Hard:** `learner_profile` must exist (from `/pos-diagnostic`). If absent, stop.
+- **Soft:** `arch_blocks.obsidian_vault` recommended (from `/pos-vault`) -- persona cards need a home. If not done, explain and offer: do vault first, or proceed knowing card storage will need revisiting.
+- **Soft:** `pos-basic-vibecoding` recommended. If not done, explain and offer handoff or skip. Write `pending_resume = "pos-advisors"` before handing off.
 
-- `schema_version: "1.0"`
-- `status: "in_progress"`
-- `prereq_overrides.pos_basic_vibecoding: false`
-- `prereq_overrides.pos_vault: false`
-- `personas: []`
-- `decisions: []`
-- `counters.personas_finalized: 0`
-- `counters.decisions_authored: 0`
+Write: `status = "in_progress"`, `last_completed_step = 1`.
 
-Every subsequent write to this branch must also carry `schema_version: "1.0"`. Do not drop it after the first write.
+### Step 2 -- Expectations gate
 
-#### Step 0.2 — Check `pos-basic-vibecoding`
+Deliver verbatim in Russian:
 
-If `arch_blocks.basic_vibecoding.status == "done"` or `prereq_overrides.pos_basic_vibecoding == true`, skip this step.
+> В этом блоке мы соберём тебе совет экспертов — скилл для твоего агента, который будет помогать тебе принимать решения в разных ситуациях, имитируя рассуждения и подходы тех людей, чьему мнению ты доверяешь. В твой совет могут войти Илон Маск, Далай Лама, Ницше и любая другая публичная персона — в процессе создания мы соберём карточки выбранных тобой людей, которые дистиллируют их идеи, мышление и тон. В конце ты получишь возможность посмотреть на любой беспокоящий тебя вопрос как будто бы их глазами, с разных сторон. Конечное решение, как действовать, будет оставаться за тобой.
 
-Say: `«С этим блоком проще после `/pos-basic-vibecoding`: там ты уже видел, как агент делает работу кусками и как фиксировать правила. Без него идти можно только осознанно.»`
+Ask whether the learner is in — one confirmation. If they decline, write `status = "skipped"` and stop the block.
 
-Check: `«Что выбираешь: 1 сначала пройти `/pos-basic-vibecoding`, 2 идти дальше и взять этот риск на себя?»`
+Write: `mental_models_taught.llm-distillation`, `mental_models_taught.persona-from-corpus`, `mental_models_taught.advisor-not-verdict`, `expectations_acked_at`, `last_completed_step = 2`.
 
-Branch:
+### Step 3 -- Research provider
 
-- `1` -> Say: `«Окей. Сначала пройди `/pos-basic-vibecoding`, потом вернись сюда командой `/pos-advisors`.»`
-- `2` -> Action (silent): write `prereq_overrides.pos_basic_vibecoding: true`.
+Silently detect available research surfaces (CLI wrappers, MCP, built-in WebSearch). Propose the best available tier and the fallback ladder. Teach `research-provider-saves-context`.
 
-#### Step 0.3 — Check `pos-vault`
+If the learner wants to install a better tier, guide them through it. If install fails, fall to the next tier.
 
-If `arch_blocks.obsidian_vault.status == "done"` or `prereq_overrides.pos_vault == true`, skip this step.
+Run one small verification query to confirm the provider works. Record the active tier.
 
-Say: `«И ещё одно. Итогом здесь будут файлы в твоём vault. Если vault ещё не собран, можно продолжать только с явным пониманием, что часть шагов потом придётся повторить уже на живом хранилище.»`
+Write: `mental_models_taught.research-provider-saves-context`, `provider_tier`, `provider_name`, `provider_verified_at`, `last_completed_step = 3`.
 
-Check: `«Что выбираешь: 1 сначала пройти `/pos-vault`, 2 идти дальше и взять этот риск на себя?»`
+### Step 4 -- Advisor shortlist
 
-Branch:
+Ask for 2-4 real public figures with enough published material (books, interviews, talks, articles). If the learner names someone with thin sources, explain the source problem and ask for a better-grounded alternative. If they name more than four, ask them to cut to four now and keep the rest for later.
 
-- `1` -> Say: `«Окей. Сначала пройди `/pos-vault`, потом вернись сюда командой `/pos-advisors`.»`
-- `2` -> Action (silent): write `prereq_overrides.pos_vault: true`.
+Once the learner has named their people, explain what happens next and why the card schema is built the way it is. Cover these points in plain Russian, conversationally — not as a lecture:
 
-### Phase 1 — Expectations and first principles
+1. **What we're about to do:** the agent will research each person's public material — books, interviews, talks — and build a structured card that distills how they think, argue, what frameworks they use, and what they would never say. This card is what later forces the agent to reason in their shape during a panel run.
+2. **Why a structured card and not just "act like X":** research on LLM role-play (RoleLLM, ACL 2024) shows that a structured evidence-linked card doubles the quality of role-specific reasoning compared to just stuffing retrieved text into the prompt (RoleBench SPE 38.1 vs 19.1). Simply telling the model "be Elon Musk" produces generic output; a card with grounded claims, real quotes, and negative exemplars keeps the simulation anchored.
+3. **Why seven sections specifically:** each section serves a purpose — Claims capture what the person actually believes (with proof), Voice preserves how they sound (not paraphrased), Frameworks capture how they structure decisions, Domains bound where the advice is credible, Reversals and Blind spots prevent the model from idealizing the person, and Would-not-say stops the model from putting words in their mouth. Together they form a constraint set that shapes the model's reasoning, not just its tone.
+4. **Why grounding matters:** every claim keeps a source URL and verbatim excerpt. If a quote can't be confirmed, it gets dropped. This is what separates a usable advisor from hallucinated cosplay.
 
-<!-- covers: G1, MM1, MM2, MM3, G3 -->
+Before confirming the advisor-card directory: read the vault's agent-config file (CLAUDE.md / AGENTS.md at vault root, resolved from `arch_blocks.obsidian_vault.vault_path`). Use its folder index to find the best match for advisor cards. If the vault config doesn't specify a clear location, propose `Personas/` as the default and confirm with the learner. Check the confirmed directory for existing cards. For each found card, upsert into `personas[]` with `{slug, status, path}` -- if a card passes the 7-section schema with G4 minimums, mark `status: "finalized"`; thin or incomplete cards get `status: "draft"` and re-enter the draft loop.
 
-**Goal:** land the conceptual boundary before tools and before persona work starts.
+Write: `persona_root_path`, `personas[]` (backfilled from existing cards), `last_completed_step = 4`.
 
-#### Step 1.1 — Expectations gate
+### Step 5 — Research and persona card building
 
-Say: `«Поисковый инструмент может быстро пройти по большой куче текстов и вытащить опорные куски. Из них получается не сам человек, а рабочая форма его логики. Такие советники подсвечивают углы, до которых ты сам обычно не доходишь, но решение всё равно остаётся у тебя.»`
+Loop for each advisor until at least two cards are finalized.
 
-Check: `«Согласен с этой рамкой: советники подсвечивают, решение принимаешь ты?»`
+For each advisor: run seven research passes aligned to the card sections, using bilingual queries (en + ru). Before the heavy pass, give the learner a one-line estimate of scope. Use the active provider; if it fails mid-pass, fall down the ladder.
 
-Branch:
-
-- If the learner agrees: Action (silent): write `expectations_acked_at` with current ISO timestamp.
-- If the learner pushes back, answer once in plain Russian, then re-ask the same Check.
-- If the learner still wants the panel to choose for them or explicitly declines the block: Say: `«Тогда этот блок сейчас не подходит. Здесь финальный выбор всегда остаётся у тебя.»` Action (silent): if no provider and no persona draft exists yet, write `status: "skipped"`.
-
-### Phase 2 — Provider
-
-<!-- covers: G2, MM4, 4.4, F4, G3 -->
-
-**Goal:** detect the best available tier, lock the rules-of-use, then verify one live path before persona work starts.
-
-#### Step 2.1 — Silent detection
-
-Say: `«Сейчас тихо посмотрю, что у тебя уже есть: локальные команды, MCP или только встроенный поиск.»`
-
-Build:
-
-- Detect the research surfaces that are actually live on this machine: local CLI wrappers, MCP, or built-in WebSearch.
-- If several CLI wrappers exist, probe them lightly and choose the best current first-pass tool based on what actually works now. Do not assume a winner before probing.
-- Detect relevant MCP surfaces as another viable tier, not as a hardcoded afterthought.
-- Built-in WebSearch is always the final fallback tier.
-- Do not run the first real persona query yet. This phase is capability detection only.
-- If detection itself errors, treat the failed tool or tier as unavailable and continue down the runtime fallback ladder.
-
-Completion gate: you can state one proposed active tier and one explicit fallback ladder to the learner.
-
-#### Step 2.2 — Propose the ladder and get consent
-
-Say: `«Грубое чтение сотен страниц лучше вынести в отдельный инструмент: так основной лимит не сгорает на черновом проходе, а grounding получается лучше. Предлагаю идти от того, что у тебя реально живое сейчас: сначала лучший найденный внешний инструмент, потом запасной путь, в конце встроенный поиск. Активный уровень я буду каждый раз называть вслух.»`
-
-Check: `«Идём так на том, что уже есть, или хочешь сначала поднять лучший уровень?»`
-
-Build (only on explicit install consent):
-
-- Explain the tool in one short Russian sentence before any command.
-- Research current install steps at runtime. Do not hardcode package-manager instructions in learner-facing text.
-- Install only the tier the learner approved.
-- After install, return to Step 2.1 and re-detect.
-- Do not issue any real persona query until this phase has written the rules-of-use.
-
-Failure path:
-
-- Say: `«С установкой сейчас не срослось. Можем 1 попробовать ещё раз, 2 спуститься на следующий уровень, 3 остановиться и вернуться позже.»`
-- Say: `«Если wrapper упал — покажи `tail -50 ~/bin/<wrapper>.log 2>/dev/null || echo 'нет лога'` и команду запуска.»`
-- If the learner chooses fallback, continue with the lower tier and log it on the next state write.
-
-#### Step 2.3 — Rules-of-use write
-
-Say: `«Прежде чем делать первый живой запрос, сначала зафиксируем правила в основном файле твоего агента. Для Claude Code это `CLAUDE.md`, для Codex — `AGENTS.md`. Если ты держишь оба файла синхронно, после основного обновлю и второй.»`
-
-Render this block verbatim, with `<ACTIVE_TIER>`, `<ACTIVE_NAME>`, `<FALLBACK_LADDER>`, and `<PERSONA_ROOT>` filled from the currently proposed provider and resolved vault path:
-
-```markdown
-## Personal advisors
-
-- **Active provider.** Для чернового чтения и поиска по персонам сначала используй `<ACTIVE_TIER>: <ACTIVE_NAME>`. Если он падает, даёт пусто или не тянет задачу, переходи по лестнице `<FALLBACK_LADDER>` и вслух называй активный уровень.
-- **Consent before install.** Ничего не устанавливай молча. Любая новая CLI или MCP-настройка только после моего явного согласия.
-- **Grounding.** Для каждого `Claim` сохраняй URL и дословный фрагмент. Если опоры нет, не пиши это как факт.
-- **Voice.** Цитаты в секции `Voice` только дословные.
-- **Persona scope.** Загружай карточки советников только из `<PERSONA_ROOT>`.
-- **Decision boundary.** В синтезе всегда оставляй строку `_DECIDE_:` пустой. Советники подсвечивают, решение принимаю я.
-```
-
-Say: `«Если секция уже есть, сначала покажу diff. Молча ничего не объединяю.»`
-
-Check: `«Записываем это в основной файл агента?»`
-
-Build:
-
-- Resolve the primary target file from `learner_profile.primary_agent`: `CLAUDE.md` for Claude Code, `AGENTS.md` for Codex. If the field is missing, infer from the current runtime agent and confirm once before writing.
-- If `learner_profile.keep_agent_configs_in_sync == true`, add the sibling file to the required target set after the primary append passes.
-- Read the required target set before writing.
-- If `## Personal advisors` already exists in any required target, show the diff inside the same approval moment before merging.
-- Append or merge only after explicit approval.
-- If the learner declines writing the rules, stop the skill here. Phase 2 cannot continue without the required target set updated.
-
-Completion gate: the required target set contains the `## Personal advisors` section and the learner has seen exactly what changed.
-
-If the learner declines:
-
-- Say: `«Тогда здесь остановимся. До первого живого запроса мне нужны эти правила в основном файле агента, а если у тебя включён sync — и во втором тоже.»`
-- Action (silent): write `status: "in_progress"` if the branch already exists.
-
-#### Step 2.4 — Run the live verification query
-
-Say: `«Теперь прогоню один короткий живой запрос, просто чтобы проверить, что ответ действительно приходит с текущего уровня.»`
-
-Build:
-
-- Use the active tier and the runtime fallback ladder agreed in Phase 2.
-- Run one small verification query that is easy to evaluate, for example a public transcript or interview lookup.
-- A verification passes only if the provider returns a usable result that matches the query and can be traced to a live URL or source surface.
-- If the active tool fails, tell the learner in one short Russian sentence, then retry via the next rung of the agreed ladder.
-- After each fallback, surface the new active tier to the learner.
-- Record the active tier as:
-  - `tier: "cli"` and `name` matching the live wrapper
-  - `tier: "mcp"` and `name` matching the MCP surface
-  - `tier: "builtin"` and `name: "websearch"`
-- Write `verified_at` and `rules_of_use_written: true`.
-
-Failure path:
-
-- Say: `«Сейчас не получилось получить живой ответ ни с одного уровня. Если локальный wrapper падает — покажи stderr или лог запуска.»`
-- Action (silent): keep `status: "in_progress"`.
-
-### Phase 3 — Advisor shortlist and card routing
-
-<!-- covers: G3, F5, 4.5 -->
-
-**Goal:** choose who belongs in the first working set and detect which cards already exist inside the allowed vault path.
-
-#### Step 3.1 — Ask for names
-
-Say: `«Теперь выберем людей, на чью логику тебе правда хочется смотреть. Для первого круга лучше взять 2-4 человек, про которых хватает публичных материалов: книги, интервью, выступления, письма, статьи.»`
-
-Check: `«Кого берём в первый набор?»`
-
-Branch:
-
-- If the learner gives one name, acknowledge it and ask for one more.
-- If the learner gives more than four, ask them to cut the active set to four now and keep the rest на потом.
-- If the learner gives private or thin-source people, explain the source problem plainly and ask for a better-grounded alternative.
-
-#### Step 3.2 — Check for existing cards only inside the vault
-
-Say: `«Сначала посмотрю, нет ли уже готовых карточек в папке советников внутри твоего vault. Снаружи ничего подтягивать не буду.»`
-
-Build:
-
-- Normalize each chosen name to a kebab-case slug using the full name.
-- Scan only the learner-approved advisor-card directory for matching files.
-- If a card exists outside that directory, do not load it. Tell the learner to move or copy it into the approved advisor-card directory first if they want to reuse it.
-- If a matching `personas[]` entry is `status: "draft"`, read the saved file from `<PERSONA_ROOT>/<slug>.md` before deciding what to resume. Do not resume from the slug alone.
-- For every matching card inside the approved advisor-card directory, inspect whether it satisfies the current seven-section schema and the G4 minimums.
-- Treat only compliant cards as `finalized`. Thin or incomplete cards re-enter the draft loop.
-
-Completion gate: the next advisor to work on is known, and the learner knows which cards already count.
-
-#### Step 3.3 — Route
-
-Say: `«Если карточка уже проходит по минимуму, переиспользуем её. Если нет, доберём только то, чего не хватает.»`
-
-Check: `«Продолжаем к первой карточке?»`
-
-If the learner agrees, continue to Phase 4 for the next missing or draft advisor. If two or more finalized cards already exist and the learner wants to skip directly to a consult, allow that and jump to Phase 6.
-
-### Phase 4 — Research plan for one persona
-
-<!-- covers: G4, G3, F2, 4.1 -->
-
-**Goal:** explain the research shape and rough cost before doing the first heavy pass.
-
-This phase loops until `counters.personas_finalized >= 2` or the learner explicitly chooses to stop.
-
-#### Step 4.1 — Name the current advisor
-
-Say: `«Сейчас собираю карточку для `<FULL_NAME>`. Сделаю семь отдельных проходов: что человек утверждал, какими рамками думал, как говорил, в чём реально силён, где менял позицию, где у него слабые места и что ему не стоит приписывать.»`
-
-Check: `«Идём полным проходом или хочешь сузить поиск сразу?»`
-
-#### Step 4.2 — Build the research pass
-
-Build:
-
-- Use the active provider from Phase 2.
-- If `<PERSONA_ROOT>/<slug>.md` already exists with `status: draft`, read it first and use it as the starting draft instead of starting from zero.
-- Default to seven passes aligned to the seven card sections:
-  - `Claims`
-  - `Frameworks`
-  - `Voice`
-  - `Domains of competence`
-  - `Known reversals`
-  - `Blind spots`
-  - `Would-not-say`
-- Queries are bilingual by default: issue `en` and `ru` variants for each pass.
-- If the active tier is CLI, use the best live wrapper for discovery first and any stronger wrapper only when a section stays thin. If the active tier is MCP or built-in, keep the same logic conceptually: discovery first, deeper pass only for thin sections.
-- Before the heavy pass, give the learner one short Russian estimate of rough cost and scope. Do not promise a hard token or fetch cap.
-- `Claims` is non-negotiable: keep at least three claims, each with a resolving URL and a verbatim excerpt. Each claim must be either:
-  - supported by a primary source, or
-  - supported by two corroborating reputable sources.
-- `Voice` is non-negotiable: keep at least two verbatim quotes with source URLs.
-- `Frameworks >= 1`, `Domains of competence >= 1`, `Would-not-say >= 3`.
-- At least one of `Known reversals` or `Blind spots` must carry evidence. Keep both sections in the card; when one stays thin, say so honestly.
-- If a URL does not resolve or a quote cannot be confirmed as verbatim, drop it.
-- Keep the working draft in memory until the learner explicitly wants to park it or approve it.
-- If the active provider fails mid-pass, follow the agreed runtime fallback ladder, announce the new tier, and log it on the next state write.
-
-Failure path:
-
-- If there is any partial draft worth keeping, write or refresh `<PERSONA_ROOT>/<slug>.md` immediately with frontmatter `status: draft`, then update the matching `personas[]` entry to `status: "draft"` and recompute counters.
-- Say: `«По этой персоне пока тонко по источникам. Черновик уже сохранил в папке советников со статусом draft.»`
-- Say: `«Если CLI отдал пусто/ошибку — покажи саму команду и первые 20 строк stderr.»`
-- Check: `«Что дальше: 1 добрать ещё, 2 вернуться к нему позже, 3 взять другого человека?»`
-- `2` -> Action (silent): keep `status: "in_progress"`.
-- `3` -> return to Phase 4 for the next advisor.
-
-Completion gate: you have an in-memory draft with all seven sections present and enough evidence to show the learner what is solid, what is thin, and what is dropped.
-
-#### Step 4.3 — Register or refresh the draft in state
-
-Action (silent):
-
-- If this slug is new, append a `personas[]` entry with `status: "draft"`, `path: "<PERSONA_ROOT>/<slug>.md"`, and `authored_at`.
-- If the slug already exists, update only the existing entry fields needed for the current draft state.
-- Recompute counters.
-
-Check: `«Черновик собран. Показать карточку целиком?»`
-
-### Phase 5 — Draft review, reruns, and save
-
-<!-- covers: G4, G5, G3, F2, 4.1 -->
-
-**Goal:** show the learner exactly what will land in the card, let them challenge it, and save only after review.
-
-#### Step 5.1 — Show the draft or diff
-
-Say: `«Черновик готов. Сначала покажу, что в него войдёт и на чём это держится.»`
-
-This Step is a new turn — it MUST NOT appear in the same turn as Step 4.2 output. The Check at the end of Step 4.3 enforces this boundary.
-
-Before showing the draft, narrate the research shape in one beat: name the provider tier used, the number of passes run, and which sections came back thin. Do not merge research-execution narration with the draft display.
-
-Build:
-
-- If the file already exists, show a concise diff against the current on-disk version.
-- If the file is new, show the full draft structure.
-- Always show all seven sections in this order: `Claims`, `Frameworks`, `Voice`, `Domains of competence`, `Known reversals`, `Blind spots`, `Would-not-say`.
-- For every item in `Claims`, show the claim, the source URL, the verbatim excerpt, and whether it is primary or `2x` corroborated.
-- For every item in `Voice`, show the quote verbatim and the URL.
-- If a section is intentionally thin, say so directly instead of padding.
-
-#### Step 5.2 — Learner challenge loop and exit
-
-Check: `«Что здесь не похоже на человека? Назови любой кусок, я его перепроверю или выкину. Если карточка готова, просто скажи "готово". Если хочешь остановиться или переключиться, скажи это прямо.»`
-
-Build:
-
-- If the learner flags a line, rerun only the relevant pass or drop the line immediately. Do not argue.
-- After each rerun, show only the changed part, not the whole card again unless the learner asks.
-- Keep looping until the learner says the card is ready or wants to park it as a draft.
-- Use this file shape whenever you write the card:
+The persona card uses this 7-section schema:
 
 ```markdown
 ---
-schema_version: 1.0
 name: <FULL_NAME>
 slug: <slug>
 status: draft | finalized
-provider_tier: <cli | mcp | builtin>
-provider_name: <name>
-created_at: <ISO8601>
-updated_at: <ISO8601>
 ---
 # <FULL_NAME>
 ## Claims
@@ -481,214 +135,106 @@ updated_at: <ISO8601>
 ## Voice
 - "<verbatim quote>" — <url>
 ## Domains of competence
-- <domain> — <why it belongs here, with source refs>
+- <domain> — <why, with source refs>
 ## Known reversals
 - <reversal> — <source>
-or
-- No reliable reversal found yet from checked sources.
 ## Blind spots
 - <blind spot> — <source>
-or
-- No reliable blind spot found yet from checked sources.
 ## Would-not-say
-- <negative exemplar> — <why it does not fit, with source or contrast note>
+- <negative exemplar> — <why it does not fit>
 ```
 
-- If the learner says the card is ready:
-  - Say: `«Тогда пишу в папку советников внутри vault.»`
-  - Write the file once with frontmatter `status: draft`.
-  - Read the file back from disk and verify:
-    - the file exists
-    - all seven required sections are present on disk: `Claims`, `Frameworks`, `Voice`, `Domains of competence`, `Known reversals`, `Blind spots`, `Would-not-say`
-    - G4 minimums pass on the saved file
-  - If verification passes, rewrite only the frontmatter status to `finalized`, update the matching `personas[]` entry to `status: "finalized"`, set `last_finalized_at`, and recompute counters.
-  - If verification fails, keep the file and state at `status: draft`, then say one short Russian line naming the exact first gap, for example `«Пока не закрываю карточку: не хватает `Claims >= 3`.``, and return to the same loop.
-- If the learner wants to pause or switch:
-  - Write or refresh `<PERSONA_ROOT>/<slug>.md` with frontmatter `status: draft`.
-  - Update the matching `personas[]` entry to `status: "draft"` and recompute counters.
-  - Say: `«Окей. Черновик сохранён в папке советников со статусом draft; в следующий раз продолжим прямо с него.»`
-  - If the learner pauses, stop there.
-  - If the learner switches, return to Phase 4 for the next advisor.
+Write: append to `personas[]` with `{slug, status: "draft", path}`, `last_completed_step = 5`.
 
-#### Step 5.3 — Loop or advance
+### Step 6 — Card review loop
 
-If `counters.personas_finalized < 2`:
+Show the full draft (or diff if updating). Narrate which sections came back thin.
 
-- Say: `«Нужна ещё хотя бы одна готовая карточка. Беру следующего человека.»`
-- Return to Phase 4 for the next missing advisor.
+Ask what does not feel like the person. For each flagged item: rerun only the relevant pass or drop the line. Show only the changed part after each rerun. Keep looping until the learner approves or parks the draft.
 
-If `counters.personas_finalized >= 2`:
+On approval: verify the card has all seven sections and passes G4 minimums. If yes, write to disk with `status: "finalized"` and update `personas[]` entry to `{slug, status: "finalized", path}`. If not, name the first gap and keep looping.
 
-- Say: `«База готова: минимум две карточки есть. Теперь можно брать живой вопрос.»`
-- Continue to Phase 6.
+On park: save as draft, update `personas[]` entry to `{slug, status: "draft", path}`, and either pause or move to the next advisor.
 
-### Phase 6 — Decision brief and panel composition
+If fewer than two cards are finalized, return to Step 5 for the next advisor. Once two or more are finalized, continue.
 
-<!-- covers: G6, G7, MM3, 4.5, G3 -->
+Write: update `personas[]`. Only write `last_completed_step = 6` after >= 2 cards are finalized. For parked drafts with fewer than 2 finalized, keep `last_completed_step = 5` so resume returns to the build loop.
 
-**Goal:** turn the learner's real question into one shared brief and settle the advisory panel as a conversation, not a decree.
+### Step 7 — Decision brief and panel composition
 
-#### Step 6.1 — Ask for the real decision
+Ask for one real pending decision — a concrete choice, not an abstract topic. Help tighten a vague topic into a brief with: the choice, available options, constraints, and what matters most.
 
-Say: `«Теперь нужен один живой вопрос. Не абстрактная тема, а конкретный выбор, который у тебя правда стоит прямо сейчас.»`
+Propose a panel of 2-4 advisors from the finalized cards, with one short reason per person. The learner adjusts. If they want someone not yet finalized, return to Step 5.
 
-Check: `«Какой именно?»`
+Before confirming the decisions directory: read the vault's agent-config file (CLAUDE.md / AGENTS.md at vault root, resolved from `arch_blocks.obsidian_vault.vault_path`). Use its folder index to find the best match for decision docs. If the vault config doesn't specify a clear location, propose `Decisions/` as the default and confirm with the learner.
 
-Build:
+Write: `decision_root_path`, `last_completed_step = 7`.
 
-- Help the learner tighten a vague topic into a decision brief with the concrete choice, the available options, the current constraints, and what matters most right now.
-- Keep the brief identical for all advisor runs later.
-- Generate a short decision slug from the brief for the output file.
+### Step 8 — Blind parallel panel run and synthesis
 
-#### Step 6.2 — Propose the first panel
+Before starting: verify parallel dispatch is available (Constraint 6). If not, stop and tell the learner -- do not run advisors serially.
 
-Say: `«Из готовых карточек я бы начал с такого состава: <ADVISOR_1>, <ADVISOR_2><OPTIONAL_3_4>. Коротко почему: <one short reason per person>.»`
+Run each advisor against the identical brief in isolation (Constraint 6). Each advisor gets a compact runtime card: Claims with URLs/excerpts, Frameworks, Voice, Domains, Would-not-say. Exclude Known reversals and Blind spots from the runtime card.
 
-Check: `«Оставляем этот состав или меняем?»`
-
-Build:
-
-- Propose `2-4` advisors from the finalized cards only.
-- Use `Known reversals` and `Blind spots` only as panel-selection meta; later they stay out of the runtime card.
-- If the learner wants only one advisor, explain the minimum and ask for a second.
-- If the learner wants more than four, explain the cap and ask them to cut to four.
-- If the learner asks for a new person who is not finalized yet, return to Phase 4 to build that card first.
-- You may push back on a weak panel, but only with a named reason such as "too similar", "too little source material", or "wrong domain for this question". The learner still chooses the final set within the 2-4 bound.
-
-Completion gate: the decision brief is written in memory and the final panel has `2-4` finalized advisors.
-
-### Phase 7 — Parallel blind convene
-
-<!-- covers: G8, F3, 4.2, G3 -->
-
-**Goal:** run each advisor in isolation against the same brief and collect conditional takes without cross-contamination.
-
-#### Step 7.1 — Announce the run
-
-Say: `«Сейчас каждому советнику дам один и тот же бриф и изолирую их друг от друга. Потом сведу ответы вместе; если прервёмся после этого шага, но до синтеза, вернёмся и запустим это заново.»`
-
-Check: `«Запускать?»`
-
-#### Step 7.2 — Run the panel
-
-Build:
-
-- Prepare one runtime card per advisor from the saved persona file in the learner-approved advisor-card directory only.
-- Include only `Claims` with URLs and excerpts, `Frameworks`, `Voice`, `Domains of competence`, and `Would-not-say`.
-- Exclude `Known reversals` and `Blind spots`.
-- Keep the runtime card compact but not over-compressed. `2-4k` tokens is normal here.
-- Spawn all advisor runs in one parallel dispatch, not one after another.
-- Every advisor run gets the identical decision brief, its own runtime card, an instruction to answer conditionally in the advisor's shape, an instruction not to claim certainty it does not have, and no visibility into the other advisor runs.
-- Do not approximate this step with a serial simulation. Blind parallelism is the gate.
-- Completion requirement: after the Build completes, narrate the dispatch shape in one `Build (narrated):` line: name the number of parallel runs, the runtime card composition (sections included and excluded), and that each run gets the identical brief with no cross-visibility.
-
-Failure path:
-
-- If isolated parallel runs are unavailable in the current environment, say: `«Сейчас у меня нет безопасного способа запустить их изолированно и параллельно. Здесь лучше не имитировать. Остановимся и вернёмся в среде, где это доступно.»`
-- Action (silent): keep `status: "in_progress"`.
-
-#### Step 7.3 — Render per-advisor takes
-
-Say: `«Вот что каждый из них сказал по отдельности:»`
-
-Build:
-
-- For each advisor in the panel, render a `### <Advisor Name>` subsection showing that advisor's conditional take framed as `reasoning in <Advisor>'s shape would say...`. Each subsection is its own beat. Do not skip to Phase 8 synthesis before all per-advisor subsections are visible on screen.
-
-Completion gate: all per-advisor `### <Name>` subsections are visible in the session before proceeding. You have one take per advisor, each produced from the same brief and without cross-visibility. Step 7.2 dispatch narration and Step 7.3 per-advisor takes must be visible in the session. Phase 8 save is invalid without them.
-
-### Phase 8 — Synthesis render, save, and close
-
-<!-- covers: F1, F2, G3, 4.3, MM3 -->
-
-**Goal:** show the advisory result where the learner is already looking, preserve it to disk, and close with the decision still open.
-
-#### Step 8.1 — Render in terminal first
-
-Say: `«Вот результаты работы твоих личных советников:»`
-
-Build:
-
-- Render this structure in the terminal before any file write:
+After all runs complete, render per-advisor takes in the session first (each advisor's conditional take as its own section). Then render the synthesis:
 
 ```markdown
 ## Decision brief
 - <brief>
 ## Consensus
 | Theme | Shared take | Why it matters |
-| --- | --- | --- |
-| ... | ... | ... |
 ## Disagreements
 | Theme | Advisor | Take | Tension |
-| --- | --- | --- | --- |
-| ... | ... | ... | ... |
 _DECIDE_:
 ```
 
-- Keep the advisor takes framed conditionally: `reasoning in X's shape would say...`
-- Do not fill `_DECIDE_:`
+Keep advisor takes framed conditionally: "reasoning in X's shape would say..." Never fill `_DECIDE_:`.
 
-#### Step 8.2 — Save gate
+Show the full result in the session, then offer to save to `<DECISION_ROOT>/<YYYY-MM-DD>-<slug>.md`. If a file already exists, show a diff first. Verify the saved file has all required sections.
 
-Say: `«Если ок, сохраню полный разбор в папке решений внутри твоего vault. Если файл уже есть, сначала покажу diff.»`
+Write: append to `decisions[]` with `{slug, date, path}`, `last_completed_step = 8`.
 
-Check: `«Сохранять?»`
+### Step 9 — Advisors skill creation
 
-Build:
+Explain: "Теперь создадим отдельный скилл, который ты сможешь вызывать в любой сессии — он будет знать, где лежат карточки, как запускать консилиум, и что решение всегда за тобой."
 
-- If the learner says yes, write only to `<DECISION_ROOT>/<YYYY-MM-DD>-<slug>.md`.
-- Save this structure:
+Ask what the learner wants to call the skill (propose `advisors-council` as default, let them rename).
 
-```markdown
----
-schema_version: 1.0
-date: <YYYY-MM-DD>
-slug: <slug>
-panel: [<advisor-slug-1>, <advisor-slug-2>]
-decision_filled: false
----
-# <Decision title>
-_DECIDE_:
-## Decision brief
-- <brief>
-## Advisor takes
-### <Advisor 1>
-reasoning in <Advisor 1>'s shape would say...
-### <Advisor 2>
-reasoning in <Advisor 2>'s shape would say...
-## Consensus
-| Theme | Shared take | Why it matters |
-| --- | --- | --- |
-| ... | ... | ... |
-## Disagreements
-| Theme | Advisor | Take | Tension |
-| --- | --- | --- | --- |
-| ... | ... | ... | ... |
-```
+Create a standalone skill file containing:
+- **Persona card location:** the confirmed `persona_root_path`
+- **Decision doc location:** the confirmed `decision_root_path`
+- **Research provider ladder:** active tier + fallback, as discovered in Step 3
+- **Panel run instructions:** load each card in isolation, same brief to each, no cross-visibility, spawn in parallel, synthesize consensus/disagreements
+- **Grounding rules:** Claims need URL + excerpt, Voice quotes are verbatim only, unconfirmed items get dropped
+- **Decision boundary:** `_DECIDE_:` stays empty — advisors illuminate, learner decides
+- **Card refresh:** if `next_refresh_at` is set, mention it as a reminder trigger
 
-- If the learner says no, keep the synthesis in memory, write `status: "in_progress"`.
-- If the learner says yes, read the saved file back and verify:
-  - the file exists on disk
-  - frontmatter includes `schema_version: 1.0`
-  - it contains `Decision brief`
-  - it contains one advisor subsection per selected advisor
-  - it contains `Consensus`, `Disagreements`, and `_DECIDE_:`
-- If verification fails, do not update `decisions[]`; say one short Russian line naming the exact first gap and keep `status: "in_progress"`.
-- If verification passes, update `decisions[]` with `slug`, `date`, `path`, `advisors`, `decision_filled: false`, then recompute counters.
+Before writing: show the proposed skill content and target location. Get confirmation. Then write and register in the learner's agent runtime (resolve from `learner_profile.primary_agent`: `~/.claude/skills/` for claude-code, `~/.agents/skills/` for codex). Then add a one-line reference to the agent-config file (CLAUDE.md or AGENTS.md) telling the agent to load the advisors skill when the learner asks for advice from the panel. Present the proposed addition, get confirmation, write.
 
-#### Step 8.3 — Final verification and state close
+**Git discipline.** Place the skill file in the `pos-automations` repo if it exists (under an `advisors/` subdirectory), or in the learner's vibe-coded tools repo if that's what they use. Before `git add`, create a `.gitignore` listing any env/token files. Then: if the repo is not yet git-initialized, run `git init`; then `git add` and `git commit`. If `arch_blocks.github_setup.status == "done"`, push to GitHub (create/reuse as a private repo) and verify with `git log --oneline`. Do not write `last_completed_step = 9` until the commit is confirmed.
 
-Action (silent):
+Write: `council_skill_installed = true`, `council_skill_path`, `last_completed_step = 9`.
 
-- Verify:
-  - `provider.rules_of_use_written == true`
-  - provider has a valid `verified_at`
-  - at least two `personas[]` entries are `status: "finalized"`
-  - verify each finalized persona file still exists on disk
-  - at least one decision doc exists on disk
-  - the saved decision doc contains `Decision brief`, per-advisor sections, `Consensus`, `Disagreements`, and `_DECIDE_:`
-- If any check fails, keep `status: "in_progress"`, say one short Russian line naming the exact first gap, and route back to the first missing artifact.
-- If all pass, write `status: "completed"`.
+### Step 10 — Refresh schedule and close
 
-Say: `«Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.»`
-Say: `«Готово. У тебя есть готовые карточки и первый консилиум по живому вопросу. В строке `_DECIDE_:` я оставил место под твой выбор. Когда захочешь новый вопрос или нового советника, снова запусти `/pos-advisors`.»`
+Propose a card refresh schedule: "Карточки советников — это снимок на сегодня. Люди меняют позиции, выпускают новые книги, дают новые интервью. Хочешь, я поставлю напоминание через полгода — перепроверить карточки и обновить то, что устарело?" If the learner agrees, create the reminder as a calendar event using the learner's connected calendar (discover the calendar adapter from `arch_blocks.calendar` — use gog CLI, MCP, or whatever is available). Do not use agent-internal scheduling (CronCreate, /schedule) — the reminder belongs in the learner's own calendar where they will actually see it. Write `next_refresh_at` as the chosen date. If the learner wants a different interval or additional reminders (e.g. "also remind me in 2 weeks to add more personas"), create those as calendar events too. If the learner declines, leave `next_refresh_at` null.
+
+Verify all end-state items are met: provider verified, >= 2 finalized persona files on disk, >= 1 decision doc on disk with all required sections, council skill installed and committed. If any check fails, name the gap and route back.
+
+Set `status = "completed"`. Recommend the next block from `learner-state.json` course path. Mention `/pos-feedback` briefly.
+
+Close:
+
+> Готово. У тебя есть готовые карточки, первый консилиум по живому вопросу и скилл, который можно вызвать в любой сессии. В строке `_DECIDE_:` я оставил место под твой выбор. Когда захочешь новый вопрос или нового советника, снова запусти `/pos-advisors`.
+
+Write: `status`, `completed_at`, `next_refresh_at` (if opted in), `last_completed_step = 10`.
+
+## Rules
+
+1. **Language and tone.** Speak Russian to the user. Use `ты`. Plain, warm, like explaining to a friend. All user-visible text Russian -- no English leaking.
+2. **Silent state.** State reads and writes are invisible. Never show JSON field names or dot-paths to the user.
+3. **Concept before jargon.** Explain what a research provider does before naming tiers. Explain what a persona card is before showing the schema.
+4. **Transparency before action.** Before any research pass or file write, one short Russian sentence on what is about to happen.
+5. **Present then confirm then write.** For persona cards and decision docs.
+6. **Diff-first review.** When showing persona drafts or updating existing files, lead with what changed, not the whole artifact again.
+7. **One mental model at a time.** Never stack two new MMs in one learner-visible beat.

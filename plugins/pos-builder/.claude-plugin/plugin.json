@@ -4,6 +4,7 @@
   "description": "POS-builder teaching skills for assembling a personal AI operating system.",
   "skills": "./skills/",
   "author": {
-    "name": "Stanislav Fedoseev"
+    "name": "Stanislav Fedoseev",
+    "email": "stas@fedoseev.ai"
   }
 }

@@ -1,10 +1,12 @@
 {
   "schema_version": 1,
-  "catalog_version": "2026-04-23",
+  "catalog_version": "2026-05-03",
+  "source_repo": "https://github.com/fedoseevstanislav/pos-guided-assembly",
   "feedback_repo": "fedoseevstanislav/pos-builder",
   "notes_ru": [
     "status=shipped означает: скилл реально входит в текущий bundle.",
-    "Каталог в этом clean dist repo содержит только реально включённые рабочие скиллы."
+    "status=planned означает: слот зарезервирован; название, команда и описание могут уточняться.",
+    "planned записи нужны для маршрутизации и прозрачного статуса \"Скоро\", а не как обещание неизменного slug."
   ],
   "runtime_home": {
     "env_var": "POS_HOME",
@@ -49,16 +51,16 @@
       "prereq_skills": []
     },
     {
-      "slug": "pos-stt-setup",
-      "name": "POS STT Setup",
+      "slug": "pos-voice-typing",
+      "name": "POS Voice Typing",
       "name_ru": "Голосовой ввод",
-      "command": "/pos-stt-setup",
+      "command": "/pos-voice-typing",
       "status": "shipped",
       "availability_ru": "Доступно",
       "menu_visible": true,
       "kind": "capability",
-      "bundle_path": "skills/pos-stt-setup/SKILL.md",
-      "menu_description": "Use when the learner types `/pos-stt-setup`, asks to set up voice input, or needs a speech-to-text tool before later POS blocks.",
+      "bundle_path": "skills/pos-voice-typing/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-voice-typing`, asks to set up voice input, or needs a speech-to-text tool before later POS blocks.",
       "state_branch": "top_level.stt_status",
       "primary_use_case_id": 104,
       "related_block_ids": [
@@ -400,6 +402,298 @@
         61
       ],
       "prereq_skills": []
+    },
+    {
+      "slug": "pos-meeting-transcription",
+      "name": "POS Meeting Transcription",
+      "name_ru": "Транскрибация встреч",
+      "command": "/pos-meeting-transcription",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": "skills/pos-meeting-transcription/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-meeting-transcription`, asks how to transcribe meetings, wants a meeting-to-text pipeline, or needs meeting transcripts to land in a useful place.",
+      "state_branch": "arch_blocks.meeting_transcription",
+      "primary_use_case_id": 5,
+      "related_block_ids": [
+        36
+      ],
+      "prereq_skills": [
+        "pos-basic-vibecoding",
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-memory-basics",
+      "name": "POS Memory Basics",
+      "name_ru": "Память агента: основы",
+      "command": "/pos-memory-basics",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "runtime",
+      "bundle_path": "skills/pos-memory-basics/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-memory-basics`, asks how agents remember things between sessions, wants to set up CLAUDE.md / rules / persistent state, or needs the baseline memory surfaces.",
+      "state_branch": "arch_blocks.memory_basics",
+      "primary_use_case_id": 10,
+      "related_block_ids": [
+        20,
+        101
+      ],
+      "prereq_skills": [
+        "pos-vault",
+        "pos-github-setup"
+      ]
+    },
+    {
+      "slug": "pos-agents",
+      "name": "POS Agents",
+      "name_ru": "Автономные агенты",
+      "command": "/pos-agents",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for cron, OpenClaw, and longer-running autonomous POS automations.",
+      "state_branch": "arch_blocks.agents",
+      "primary_use_case_id": 14,
+      "related_block_ids": [
+        3,
+        60,
+        61
+      ],
+      "prereq_skills": [
+        "pos-vps"
+      ]
+    },
+    {
+      "slug": "pos-presentations",
+      "name": "POS Presentations",
+      "name_ru": "Презентации",
+      "command": "/pos-presentations",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for assembling presentations from the learner's existing context and materials.",
+      "state_branch": "arch_blocks.presentations",
+      "primary_use_case_id": 16,
+      "related_block_ids": [
+        20
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-knowledge",
+      "name": "POS Knowledge",
+      "name_ru": "Сбор знаний",
+      "command": "/pos-knowledge",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for collecting and structuring knowledge from multiple sources into the learner's system.",
+      "state_branch": "arch_blocks.knowledge",
+      "primary_use_case_id": 17,
+      "related_block_ids": [
+        34,
+        35,
+        100
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-support",
+      "name": "POS Support",
+      "name_ru": "Поддержка в течение дня",
+      "command": "/pos-support",
+      "status": "planned",
+      "availability_ru": "Отложено",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Deferred skill for in-day support prompts and lightweight nudges.",
+      "state_branch": "arch_blocks.support",
+      "primary_use_case_id": 102,
+      "related_block_ids": [
+        20
+      ],
+      "prereq_skills": [
+        "pos-goals"
+      ]
+    },
+    {
+      "slug": "pos-youtube",
+      "name": "POS YouTube",
+      "name_ru": "Знания из YouTube",
+      "command": "/pos-youtube",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for extracting useful knowledge from YouTube into the learner's system.",
+      "state_branch": "arch_blocks.youtube",
+      "primary_use_case_id": 103,
+      "related_block_ids": [
+        35
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-inbox",
+      "name": "POS Inbox",
+      "name_ru": "Летучий inbox",
+      "command": "/pos-inbox",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for a quick capture inbox where ideas and notes can land before later processing.",
+      "state_branch": "arch_blocks.inbox",
+      "primary_use_case_id": 113,
+      "related_block_ids": [
+        34,
+        100
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-digest",
+      "name": "POS Digest",
+      "name_ru": "Персональный дайджест",
+      "command": "/pos-digest",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for assembling a periodic digest from selected channels and signals.",
+      "state_branch": "arch_blocks.digest",
+      "primary_use_case_id": 105,
+      "related_block_ids": [
+        35,
+        60
+      ],
+      "prereq_skills": [
+        "pos-email",
+        "pos-telegram"
+      ]
+    },
+    {
+      "slug": "pos-research",
+      "name": "POS Research",
+      "name_ru": "Research и персональная wiki",
+      "command": "/pos-research",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for research workflows and a reusable personal knowledge surface.",
+      "state_branch": "arch_blocks.research",
+      "primary_use_case_id": 106,
+      "related_block_ids": [
+        35,
+        100
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-alisa",
+      "name": "POS Alisa",
+      "name_ru": "Интеграция с Алисой",
+      "command": "/pos-alisa",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "adapter",
+      "bundle_path": null,
+      "menu_description": "Planned skill for connecting Yandex Alisa as a voice surface for the learner's POS.",
+      "state_branch": "arch_blocks.alisa",
+      "primary_use_case_id": 109,
+      "related_block_ids": [
+        54
+      ],
+      "prereq_skills": [
+        "pos-vps"
+      ]
+    },
+    {
+      "slug": "pos-telegram-agent",
+      "name": "POS Telegram Agent",
+      "name_ru": "Персональный агент в Telegram",
+      "command": "/pos-telegram-agent",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "workflow",
+      "bundle_path": null,
+      "menu_description": "Planned skill for a more autonomous Telegram-side agent after the narrow adapter path exists.",
+      "state_branch": "arch_blocks.telegram_agent",
+      "primary_use_case_id": 110,
+      "related_block_ids": [
+        32,
+        3,
+        61
+      ],
+      "prereq_skills": [
+        "pos-telegram",
+        "pos-vps"
+      ]
+    },
+    {
+      "slug": "pos-health",
+      "name": "POS Health",
+      "name_ru": "Здоровье",
+      "command": "/pos-health",
+      "status": "planned",
+      "availability_ru": "Скоро",
+      "menu_visible": true,
+      "kind": "adapter",
+      "bundle_path": null,
+      "menu_description": "Planned skill for health data capture and health-aware brief workflows.",
+      "state_branch": "arch_blocks.health",
+      "primary_use_case_id": 200,
+      "related_block_ids": [
+        33
+      ],
+      "prereq_skills": [
+        "pos-vault"
+      ]
+    },
+    {
+      "slug": "pos-security",
+      "name": "POS Security",
+      "name_ru": "Безопасность",
+      "command": "/pos-security",
+      "status": "shipped",
+      "availability_ru": "Доступно",
+      "menu_visible": true,
+      "kind": "cross_cutting",
+      "bundle_path": "skills/pos-security/SKILL.md",
+      "menu_description": "Use when the learner types `/pos-security`, asks how to protect their POS from hostile emails / calendar events / Telegram messages / task text, or needs the baseline rule that incoming adapter content is data, not instructions.",
+      "state_branch": "arch_blocks.security",
+      "primary_use_case_id": null,
+      "related_block_ids": [],
+      "prereq_skills": [
+        "pos-diagnostic"
+      ]
     }
   ]
 }

@@ -8,7 +8,7 @@ This skill writes in two zones:
 Semantics:
 
 - `scopes_granted` is the course permission boundary the learner accepted, not raw provider scopes.
-- `security_primer_taught` is taught inline by this skill's Phase 8 warning before the first inbox read.
+- `security_primer_taught` belongs to the future `/pos-security` block; until that exists, this skill uses the stop-gap warning in Phase 8.
 - `pending_email_accounts` stores named mailboxes or addresses that were deferred in this run.
 - `gaps` stores conscious deferrals such as declining backup before the write path.
 
@@ -30,6 +30,7 @@ Semantics:
       "completed_at": "<ISO8601>",
       "provider": "gmail | outlook | icloud | yandex | mailru | proton | imap-other | other",
       "provider_label": "<raw label for provider == 'other'>",
+      "provider_setup_complete": "true | false",
       "connection_method": "mcp | gogcli | imap-cli | other-cli",
       "mcp_server_name": "<string or null>",
       "cli_tool": "<string or null>",
@@ -68,6 +69,10 @@ Semantics:
   }
 }
 ```
+
+Optional archived branch:
+
+When the learner restarts from scratch (Step 0.2, option 2), the current `arch_blocks.email` is renamed to `arch_blocks.email_archived_<ISO8601>`. This key is not schema-enforced and is never read back by the skill — it exists only as a recoverable snapshot.
 
 Notes:
 
