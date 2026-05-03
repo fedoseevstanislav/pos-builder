@@ -4,8 +4,14 @@ Interactive course for building a personal AI operating system. Runs as a set of
 
 ## Quick Start
 
+**Claude Code:**
 ```
-claude plugin install fedoseevstanislav/pos-guided-assembly
+claude plugin install fedoseevstanislav/pos-builder
+```
+
+**Codex:**
+```
+codex plugin install fedoseevstanislav/pos-builder
 ```
 
 Then type `/pos-intro` to begin.

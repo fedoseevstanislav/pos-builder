@@ -5,10 +5,10 @@
   "author": {
     "name": "Stanislav Fedoseev",
     "email": "stas@fedoseev.ai",
-    "url": "https://github.com/fedoseevstanislav/pos-guided-assembly"
+    "url": "https://github.com/fedoseevstanislav/pos-builder"
   },
-  "homepage": "https://github.com/fedoseevstanislav/pos-guided-assembly",
-  "repository": "https://github.com/fedoseevstanislav/pos-guided-assembly",
+  "homepage": "https://github.com/fedoseevstanislav/pos-builder",
+  "repository": "https://github.com/fedoseevstanislav/pos-builder",
   "license": "UNLICENSED",
   "keywords": [
     "education",
@@ -28,9 +28,9 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/fedoseevstanislav/pos-guided-assembly",
-    "privacyPolicyURL": "https://github.com/fedoseevstanislav/pos-guided-assembly",
-    "termsOfServiceURL": "https://github.com/fedoseevstanislav/pos-guided-assembly",
+    "websiteURL": "https://github.com/fedoseevstanislav/pos-builder",
+    "privacyPolicyURL": "https://github.com/fedoseevstanislav/pos-builder",
+    "termsOfServiceURL": "https://github.com/fedoseevstanislav/pos-builder",
     "defaultPrompt": [
       "Start the POS course with the diagnostic interview.",
       "Set up one POS block such as vault, calendar, or goals.",
