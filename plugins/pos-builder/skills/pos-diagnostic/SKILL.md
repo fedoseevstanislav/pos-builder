@@ -469,19 +469,27 @@ Use this structure, filling each line with concrete content from the learner's d
 
 ### Step 5.3 — Next step
 
-**Internal LLM instruction:** Determine the next launchable block from the generated route in Step 4.3. This must be the highest-priority **shipped** block. If `pos-vault` is already done, do NOT hardcode it here. When speaking in this step, always substitute the real command explicitly instead of leaving placeholders.
+**Internal LLM instruction:** There is a fixed foundation sequence that runs before the personalized route:
 
-Action: Ask with the real command, for example: «Первый доступный шаг — `/pos-vault`. Готов(а) начать?»
+1. `/pos-memory-basics` — agent memory setup (rules file, mental model)
+2. `/pos-vault` — knowledge base (Obsidian vault)
+3. `/pos-github-setup` — task tracking (GitHub Issues)
+
+Determine which is the next uncompleted foundation skill by checking state: `arch_blocks.memory_basics`, `arch_blocks.obsidian_vault`, `arch_blocks.github_setup`. Offer the first one that is not `"done"`. If all three are done, fall back to the highest-priority shipped block from the personalized route in Step 4.3. Exception: if the learner demonstrated strong technical fluency during the interview (has GitHub, uses Obsidian, familiar with agent configs), they may skip ahead to the personalized route — offer the choice.
+
+Action: Offer the next foundation skill. For the first run this is always memory-basics:
+
+«Следующий шаг — `/pos-memory-basics`: настроим базовую память агента, чтобы он не начинал каждую сессию с чистого листа. После этого — хранилище знаний и трекер задач. Это фундамент для всего остального. Готов(а)?»
 
 Check: Wait for answer.
 
 If **yes** →
 
-Action: Say the concrete command explicitly, for example: «Запускай `/pos-vault` — начнём с этого шага. Если потом захочешь оставить фидбек по диагностике, скажи — я помогу его оформить.»
+Action: Say the concrete command: «Запускай `/<command>` — начнём с этого. Если потом захочешь оставить фидбек по диагностике — скажи, я помогу оформить.»
 
 If **no** →
 
-Action: Say the concrete command explicitly, for example: «Ок, всё сохранено. Когда будешь готов(а) — запусти `/pos-vault`. Если что-то было непонятно, сломано или хочется по-другому — скажи: я помогу оформить фидбек здесь или отдельно открыть `/pos-feedback`.»
+Action: «Ок, всё сохранено. Когда будешь готов(а) — запусти `/<command>`. Если что-то было непонятно или хочется по-другому — `/pos-feedback`.»
 
 ## Rules
 

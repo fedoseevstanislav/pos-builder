@@ -191,9 +191,11 @@ Write: `wow_moment_done = true`, `last_completed_step = 8`.
 
 Update `my-architecture.md` with an Email section (provider, method, mailboxes, scopes, credential location, backup status, rules skill path, setup date). Show proposed content, get confirmation, then write.
 
-Determine status: `done` if all critical end-state items are met — rules skill is installed (rules_skill_installed), architecture doc is updated, adapter is authorized (credentials_path set), at least one personal mailbox connected (mailboxes_connected contains at least one entry with class 'personal'), first read done (first_read_done), live moment completed (wow_moment_done), and if write mode — backup configured (backup_enabled, backup_location set) and action log exists (action_log_path set). Otherwise `incomplete`. If done, recommend next block from `skill-catalog.json` based on diagnostic route. If pending mailboxes exist, mention them by address.
+Determine status: `done` if all critical end-state items are met — rules skill is installed (rules_skill_installed), architecture doc is updated, adapter is authorized (credentials_path set), at least one personal mailbox connected (mailboxes_connected contains at least one entry with class 'personal'), first read done (first_read_done), live moment completed (wow_moment_done), and if write mode — backup configured (backup_enabled, backup_location set) and action log exists (action_log_path set). Otherwise `incomplete`. If pending mailboxes exist, mention them by address.
 
-> Почта подключена. Сейчас рекомендую пройти `/pos-security` — настроим защиту от prompt injection атак, это особенно важно теперь, когда агент читает внешний контент из почты. Если хочешь оставить обратную связь создателям по поводу этого блока, скажи и я помогу тебе это сделать.
+**Security handoff.** If `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from `skill-catalog.json` based on diagnostic route.
+
+> Если хочешь оставить обратную связь создателям по поводу этого блока, скажи и я помогу тебе это сделать.
 
 Write: `status`, `completed_at` (if done), `last_completed_step = 9`.
 

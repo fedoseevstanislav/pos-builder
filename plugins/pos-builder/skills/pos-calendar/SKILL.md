@@ -202,9 +202,11 @@ Re-read the calendar (fresh, not cached). Answer the question. If write-enabled 
 
 **Architecture doc update.** Add a Calendar section to `my-architecture.md`: provider, connection method, calendars connected, scopes, credentials location, backup info (if applicable), rules skill path, setup date. Present-confirm-write.
 
-**State and handoff.** Determine status: `done` if all critical end-state items are met — rules skill is installed (rules_skill_installed), architecture doc is updated, adapter is authorized (credentials_path set), first read is done (calendars_connected non-empty), live moment completed (live_moment_done), and if write mode — backup configured (backup_enabled, backup_location set) and action log exists (action_log_path set). Otherwise `incomplete`. If done, recommend next block from `skill-catalog.json` based on diagnostic route.
+**State and handoff.** Determine status: `done` if all critical end-state items are met — rules skill is installed (rules_skill_installed), architecture doc is updated, adapter is authorized (credentials_path set), first read is done (calendars_connected non-empty), live moment completed (live_moment_done), and if write mode — backup configured (backup_enabled, backup_location set) and action log exists (action_log_path set). Otherwise `incomplete`.
 
-> Следующий блок — [next skill name]. Если хочешь оставить обратную связь создателям по поводу этого блока, скажи и я помогу тебе это сделать.
+**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from `skill-catalog.json` based on diagnostic route.
+
+> Если хочешь оставить обратную связь создателям по поводу этого блока, скажи и я помогу тебе это сделать.
 
 Write: `status`, `completed_at` (if done), `last_completed_step = 9`, `live_moment_done = true` (after live moment completed). Write `mental_models_taught.voice-agent-over-ui` if newly taught.
 

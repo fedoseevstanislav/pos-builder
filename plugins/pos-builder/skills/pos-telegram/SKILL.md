@@ -190,7 +190,7 @@ Write: `wow_moment_mode`, `last_completed_step = 11`.
 
 If `rules_skill_installed` is not true, set `status = "incomplete"` (not "done"). Otherwise set `status = "done"`.
 
-If status is done: recommend `/pos-security` — now that the agent has access to Telegram, setting up security protections is important. Then recommend the next block from the course path — read from `learner-state.json`, cross-reference with completed blocks, name the specific block and slash command. Mention `/pos-feedback`. If incomplete: tell the user what's missing and how to finish.
+**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from the course path — read from `learner-state.json`, cross-reference with completed blocks, name the specific block and slash command. Mention `/pos-feedback`. If incomplete: tell the user what's missing and how to finish.
 
 Write always: `status`, `last_completed_step = 12`. Write only if done: `completed_at`, `learner_profile.vibe_coded_tools_built[] += "pos-telegram"`.
 

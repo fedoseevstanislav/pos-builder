@@ -245,7 +245,7 @@ If done: set `completed_at`. Clear `pending_resume`.
 
 **Summary and next block.** Summarize what was accomplished: which trackers are connected, which is main, whether write is enabled, which skills were created. If deferred trackers exist: name them, say they can be connected by running `/pos-tasks` again. If gap notes: mention loose ends.
 
-Recommend the next block from the skill catalog. Do not recommend `/pos-tasks` itself. Tell the learner which block comes next. Ask if they want to jump or take a break. On pause: everything is saved.
+**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from the skill catalog. Do not recommend `/pos-tasks` itself. Tell the learner which block comes next. Ask if they want to jump or take a break. On pause: everything is saved.
 
 Write: `status`, `completed_at` (if done), `gaps[]`, `last_completed_step = 7`.
 

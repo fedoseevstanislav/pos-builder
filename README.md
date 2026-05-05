@@ -18,9 +18,13 @@ Then type `/pos-intro` to begin.
 
 ## What's Inside
 
-22 shipped skills covering: diagnostic interview, voice typing, VPS foundation, Obsidian vault, GitHub setup, calendar, email, Telegram, tasks, vibecoding basics, goals, morning brief, day summary, triage, dashboard, advisors, observability, meeting transcription, memory basics, security, feedback, and intro.
+22 skills in minimal-frame format (Role, End state, State, Constraints, Flow, Rules).
 
-Each skill is a self-contained teaching script in minimal-frame format (Role, End state, State, Constraints, Flow, Rules).
+**Старт:** Intro, Diagnostic, Voice Typing, Memory Basics
+**Фундамент:** VPS, Vault, GitHub Setup
+**Каналы:** Calendar, Email, Telegram, Tasks, Security
+**Навыки:** Basic Vibecoding, Goals, Morning Brief, Day Summary, Triage, Meeting Transcription
+**Дополнительно:** Dashboard, Advisors, Observability, Feedback
 
 ## Requirements
 

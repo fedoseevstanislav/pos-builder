@@ -434,17 +434,14 @@
       "menu_visible": true,
       "kind": "runtime",
       "bundle_path": "skills/pos-memory-basics/SKILL.md",
-      "menu_description": "Use when the learner types `/pos-memory-basics`, asks how agents remember things between sessions, wants to set up CLAUDE.md / rules / persistent state, or needs the baseline memory surfaces.",
+      "menu_description": "Use when the learner types `/pos-memory-basics`, asks how agents remember things between sessions, or wants to build their first rules file (CLAUDE.md / AGENTS.md). Foundational block — no prerequisites.",
       "state_branch": "arch_blocks.memory_basics",
       "primary_use_case_id": 10,
       "related_block_ids": [
         20,
         101
       ],
-      "prereq_skills": [
-        "pos-vault",
-        "pos-github-setup"
-      ]
+      "prereq_skills": []
     },
     {
       "slug": "pos-agents",
