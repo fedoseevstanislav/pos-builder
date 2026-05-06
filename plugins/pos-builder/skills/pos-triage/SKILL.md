@@ -39,7 +39,7 @@ Fields in `learner-state.json` under `arch_blocks.triage`. `last_completed_step`
 
 Read-only dependencies: `learner_profile` (prereq check, primary agent), `arch_blocks.{goals,telegram,calendar,email,basic_vibecoding}`.
 
-On entry: read `learner-state.json`. If `status == "in_progress"` AND `last_completed_step == 8` AND `commit_at_close == "deferred"`, ask whether the learner has committed since last time. If yes → set `status = "done"`, `completed_at`, recommend next block. If no → remind them to commit and re-run `/pos-triage` when ready, then stop. Otherwise, if `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, resume from the next step.
+On entry: read `learner-state.json`. If `status == "in_progress"` AND `last_completed_step == 8` AND `commit_at_close == "deferred"`, ask whether the learner has committed since last time. If yes → set `status = "done"`, `completed_at`, recommend next block. If no → remind them to commit and re-run `/pos-triage` (or `/skill:pos-triage` in Codex) when ready, then stop. Otherwise, if `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, resume from the next step.
 
 ## Mental models
 
@@ -67,14 +67,14 @@ Four models taught at natural moments in the flow. For each: if slug not in `men
 
 ### Step 1 — Prerequisites and intro
 
-Check `learner_profile` first. If absent, tell the learner to run `/pos-diagnostic` first and stop.
+Check `learner_profile` first. If absent, tell the learner to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first and stop.
 
 Check hard prerequisites. Each missing one gets its own Russian explanation of why it blocks triage:
 - **pos-goals** missing → «без него непонятно, что для тебя вообще важнее»
 - **pos-telegram** missing → «без живого Telegram-потока здесь нечего ранжировать»
 - **pos-calendar** missing → «без ближайшего календаря триаж будет слепым к тому, что уже стоит в дне»
 
-If any hard prereq is missing, name the missing `/pos-*` commands and stop. Do not continue.
+If any hard prereq is missing, name the missing `/pos-*` commands (or `/skill:pos-*` in Codex) and stop. Do not continue.
 
 Check soft prerequisites: **pos-basic-vibecoding** (dev tools), **pos-email** (additional surface). For each missing one, explain in one sentence why it helps, then let the learner choose: do it first or proceed without. If the learner chooses to do a soft prereq first, write `pending_resume = "pos-triage"` before stopping.
 
@@ -170,7 +170,7 @@ Ask if the learner wants to add anything later (other surfaces, work rules, futu
 
 **Architecture doc update (mandatory).** Resolve `POS_HOME` from `$POS_HOME` env var, falling back to `~/.pos-builder`. Find `my-architecture.md` there. Add a short triage section: what was built, connected adapters, skill path, read-only contract. Show proposed section, get confirmation, write.
 
-**Commit gate.** Suggest committing the skill source. If the learner commits now, set `commit_at_close = "committed"`. If they defer, set `commit_at_close = "deferred"` and tell them to re-run `/pos-triage` after committing to close the block.
+**Commit gate.** Suggest committing the skill source. If the learner commits now, set `commit_at_close = "committed"`. If they defer, set `commit_at_close = "deferred"` and tell them to re-run `/pos-triage` (or `/skill:pos-triage` in Codex) after committing to close the block.
 
 If committed: set `status = "done"`, `completed_at`, recommend next block from the learner's diagnostic route. If deferred: keep `status = "in_progress"`.
 

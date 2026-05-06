@@ -57,8 +57,8 @@ One MM at a time. If the slug already exists in `mental_models_taught`, remind i
 
 ## Constraints
 
-1. **Vault prerequisite.** `arch_blocks.obsidian_vault.status` must be `"done"`. If not, pause and route to `/pos-vault` with `pending_resume = "pos-goals-after-vault"`.
-2. **Calendar is the only scheduling path.** Calendar must be done with write scope available before scheduling can proceed. If not ready, pause and route to `/pos-calendar`. No file-based fallback.
+1. **Vault prerequisite.** `arch_blocks.obsidian_vault.status` must be `"done"`. If not, pause and route to `/pos-vault` (или `/skill:pos-vault` в Codex) with `pending_resume = "pos-goals-after-vault"`.
+2. **Calendar is the only scheduling path.** Calendar must be done with write scope available before scheduling can proceed. If not ready, pause and route to `/pos-calendar` (или `/skill:pos-calendar` в Codex). No file-based fallback.
 3. **Never infer goals from outside sources.** Use only what the learner says or explicitly approves reading. No tasks, calendar, mail, Telegram, diagnostic notes.
 4. **Existing files: diff-and-confirm.** Never silently read, reformat, migrate, overwrite, or delete existing goals artifacts. Always show and confirm first.
 5. **Tagged-pass floor before write.** In Wheel-of-Life mode, all 8 domains must have content or the exact tag `не в фокусе сейчас`. In custom mode, the lighter sanity check: Markdown, non-empty, at least one H2.
@@ -99,7 +99,7 @@ Resume artifact table (infer resume from first missing item):
 | otherwise | Step 8 |
 
 Gate and re-entry messages: generate at runtime in Russian. Convey the essential meaning for each case:
-- **Vault missing:** vault is needed to store goals, go do `/pos-vault` first, then come back with `/pos-goals`.
+- **Vault missing:** vault is needed to store goals, go do `/pos-vault` (или `/skill:pos-vault` в Codex) first, then come back with `/pos-goals` (или `/skill:pos-goals` в Codex).
 - **Resume after vault:** vault is ready, continuing with goals.
 - **Resume after calendar:** calendar is connected, continuing.
 - **Done + file readable:** offer update, rebuild, or exit.
@@ -199,8 +199,8 @@ Write: `horizons_resolved = true`, `scheduling_mode = "calendar"`, `review_caden
 
 **Calendar gate:** Check `arch_blocks.calendar`:
 - **Done + write scope** -- continue to Step 6.
-- **Done, no write scope** -- tell the learner calendar is connected but write access is needed for reminders, route to `/pos-calendar` to enable write, then return with `/pos-goals`. Write `pending_resume = "pos-goals-after-calendar-write"`, stop.
-- **Not done** -- tell the learner calendar is needed for review reminders, route to `/pos-calendar`, then return with `/pos-goals`. Write `pending_resume = "pos-goals-after-calendar"`, stop.
+- **Done, no write scope** -- tell the learner calendar is connected but write access is needed for reminders, route to `/pos-calendar` (или `/skill:pos-calendar` в Codex) to enable write, then return with `/pos-goals` (или `/skill:pos-goals` в Codex). Write `pending_resume = "pos-goals-after-calendar-write"`, stop.
+- **Not done** -- tell the learner calendar is needed for review reminders, route to `/pos-calendar` (или `/skill:pos-calendar` в Codex), then return with `/pos-goals` (или `/skill:pos-goals` в Codex). Write `pending_resume = "pos-goals-after-calendar"`, stop.
 
 ### Step 6 -- Calendar events and horizons.md
 
@@ -248,9 +248,9 @@ Before writing `status = "done"`, verify: goals file exists at `goals_path`; if 
 
 Write final state: `status = "done"`, `completed_at` (preserve if already set), `pending_resume = null`, `last_completed_step = 8`.
 
-Close with a short summary: goals are written, review reminders are in the calendar, downstream skills (morning brief, triage, day summary) can now use them. Recommend `/pos-morning-brief` or `/pos-triage` as next blocks.
+Close with a short summary: goals are written, review reminders are in the calendar, downstream skills (morning brief, triage, day summary) can now use them. Recommend `/pos-morning-brief` (или `/skill:pos-morning-brief` в Codex) or `/pos-triage` (или `/skill:pos-triage` в Codex) as next blocks.
 
-If not yet reminded this session, mention `/pos-feedback` in one natural sentence.
+If not yet reminded this session, mention `/pos-feedback` (или `/skill:pos-feedback` в Codex) in one natural sentence.
 
 ## Rules
 

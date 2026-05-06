@@ -66,7 +66,7 @@ Read-only dependencies: `learner_profile` (prereq check), `learner_profile.prima
 ### Step 1 — Prerequisites and intro
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic`). If absent, tell the learner to run `/pos-diagnostic` first. Stop.
+- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex)). If absent, tell the learner to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first. Stop.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the learner where they left off, pick up from the next step. If `status == "done"`, show a summary (path, sync method, ontology, naming convention, import count) and offer to exit or start over. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step.
 
 Deliver verbatim in Russian:

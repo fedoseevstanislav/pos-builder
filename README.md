@@ -14,7 +14,7 @@ claude plugin install fedoseevstanislav/pos-builder
 codex plugin install fedoseevstanislav/pos-builder
 ```
 
-Then type `/pos-intro` to begin.
+Then type `/pos-intro` (Claude Code) or `/skill:pos-intro` (Codex) to begin.
 
 ## What's Inside
 

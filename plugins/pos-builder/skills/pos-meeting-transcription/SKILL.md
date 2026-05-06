@@ -72,7 +72,7 @@ On entry: read `learner-state.json` and evaluate in this order:
 
 1. Tool choice is runtime-researched, not hardcoded in advance.
 2. The learner picks the tool; the agent does not silently decide for them.
-3. `/pos-basic-vibecoding` and `/pos-vault` are soft prerequisites — recommend them, do not block the skill.
+3. `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) and `/pos-vault` (или `/skill:pos-vault` в Codex) are soft prerequisites — recommend them, do not block the skill.
 4. Research must be live-verified. Do not present stale tool lore as fact.
 5. Be honest about cost, privacy, and where meeting audio/transcripts go.
 6. Before any install, auth, file write, or code generation, preview the exact action in one short Russian sentence.
@@ -97,7 +97,7 @@ On entry: read `learner-state.json` and evaluate in this order:
 ## Flow
 
 1. **Entry probe and soft-prereq check**
-   Read `learner-state.json`. If `meeting_transcription` state exists, follow the resume rule from the State section. On resume, recap before continuing: source mode, selected tool, reason, then name the next step. Check whether `/pos-basic-vibecoding` and `/pos-vault` appear done in state. If missing, recommend briefly: vibecoding gives build superpowers, vault gives a natural landing zone. Do not block. Save soft prerequisite presence. Write `status = "in_progress"` on fresh start.
+   Read `learner-state.json`. If `meeting_transcription` state exists, follow the resume rule from the State section. On resume, recap before continuing: source mode, selected tool, reason, then name the next step. Check whether `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) and `/pos-vault` (или `/skill:pos-vault` в Codex) appear done in state. If missing, recommend briefly: vibecoding gives build superpowers, vault gives a natural landing zone. Do not block. Save soft prerequisite presence. Write `status = "in_progress"` on fresh start.
 
 2. **Runtime research of current options**
    Research the current transcription landscape live. Present the learner a short, practical comparison for their situation: what can record or ingest meetings, what can transcribe, what is local vs cloud, what is cheap vs expensive, what gives better Russian quality, and what privacy/cost tradeoffs exist. Keep this to a small set of realistic candidates, not a giant catalog. Save a short `tool_candidates_summary`.
@@ -131,7 +131,7 @@ On entry: read `learner-state.json` and evaluate in this order:
    Check `learner-state.json` for connected integrations and wire up the corresponding routing as part of the pipeline:
    - If `arch_blocks.tasks.status == "done"`: add a routing step that creates validated tasks in the learner's task tracker. The pipeline presents proposed tasks and creates them on confirmation. Save `tasks_routed_to = "tracker"`.
    - If `arch_blocks.calendar.status == "done"`: add a routing step that creates follow-up meetings or calendar events from extracted items. Same confirm-then-create pattern. Save `followups_routed_to = "calendar"`.
-   - If an integration is not connected: the pipeline saves the corresponding items to a local file (tasks as a checklist, follow-ups as a list with proposed dates). Tell the learner which skill to run to enable direct routing (`/pos-tasks`, `/pos-calendar`), and that they can return to `/pos-meeting-transcription` afterward to wire up the routing. Save `tasks_routed_to = "file"` or `followups_routed_to = "file"` accordingly. Record missing integrations in `routing_gaps`.
+   - If an integration is not connected: the pipeline saves the corresponding items to a local file (tasks as a checklist, follow-ups as a list with proposed dates). Tell the learner which skill to run to enable direct routing (`/pos-tasks` (или `/skill:pos-tasks` в Codex), `/pos-calendar` (или `/skill:pos-calendar` в Codex)), and that they can return to `/pos-meeting-transcription` (или `/skill:pos-meeting-transcription` в Codex) afterward to wire up the routing. Save `tasks_routed_to = "file"` or `followups_routed_to = "file"` accordingly. Record missing integrations in `routing_gaps`.
    - Summary and open questions always go to the output target (vault note or file) regardless of integrations.
 
 10. **Track, summarize, and hand off**

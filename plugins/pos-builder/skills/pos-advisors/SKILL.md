@@ -221,11 +221,11 @@ Propose a card refresh schedule: "Карточки советников — эт
 
 Verify all end-state items are met: provider verified, >= 2 finalized persona files on disk, >= 1 decision doc on disk with all required sections, council skill installed and committed. If any check fails, name the gap and route back.
 
-Set `status = "completed"`. Recommend the next block from `learner-state.json` course path. Mention `/pos-feedback` briefly.
+Set `status = "completed"`. Recommend the next block from `learner-state.json` course path. Mention `/pos-feedback` (или `/skill:pos-feedback` в Codex) briefly.
 
 Close:
 
-> Готово. У тебя есть готовые карточки, первый консилиум по живому вопросу и скилл, который можно вызвать в любой сессии. В строке `_DECIDE_:` я оставил место под твой выбор. Когда захочешь новый вопрос или нового советника, снова запусти `/pos-advisors`.
+> Готово. У тебя есть готовые карточки, первый консилиум по живому вопросу и скилл, который можно вызвать в любой сессии. В строке `_DECIDE_:` я оставил место под твой выбор. Когда захочешь новый вопрос или нового советника, снова запусти `/pos-advisors` (или `/skill:pos-advisors` в Codex).
 
 Write: `status`, `completed_at`, `next_refresh_at` (if opted in), `last_completed_step = 10`.
 

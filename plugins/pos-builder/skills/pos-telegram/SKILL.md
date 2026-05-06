@@ -67,8 +67,8 @@ Each flow step specifies its writes. `last_completed_step` updates at every step
 ### Step 1 — Prerequisites and entry
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic`). If absent, tell the user to run `/pos-diagnostic` first. Stop.
-- **Soft:** `pos-basic-vibecoding` recommended. If not done/skipped, explain it sets up dev tools, offer handoff. Write `pending_resume = "pos-telegram"` before handing off. If the user wants to proceed without it, let them.
+- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex)). If absent, tell the user to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first. Stop.
+- **Soft:** `pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) recommended. If not done/skipped, explain it sets up dev tools, offer handoff. Write `pending_resume = "pos-telegram"` before handing off. If the user wants to proceed without it, let them.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, pick up from the next step. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step (e.g., rules not installed → Step 9).
 
 Write (fresh start only): `status = "in_progress"`, `last_completed_step = 1`.
@@ -158,7 +158,7 @@ If a telegram-rules file already exists at the target location, show the user a 
 
 Before writing: show the proposed skill content and target location to the user. Get confirmation. (In the overwrite case, the diff shown above satisfies this — do not ask for a second confirmation.) Then write and register in the user's agent runtime (e.g., `~/.claude/skills/` for Claude Code). Then add a one-line reference to the agent config file (CLAUDE.md or AGENTS.md depending on `primary_agent`) telling the agent to load the telegram-rules skill before any Telegram operation — skills in the registry are only discovered on demand, so without this pointer the agent won't know to load the rules automatically. Present the proposed addition, get confirmation, write. Must exist before any live send.
 
-After writing the skill and the agent config reference, tell the user to restart the agent (Claude Code or Codex) so the new skill becomes available — the agent won't see newly created skills until the session restarts. Save state before prompting the restart. On re-entry, `/pos-telegram` resumes at Step 10.
+After writing the skill and the agent config reference, tell the user to restart the agent (Claude Code or Codex) so the new skill becomes available — the agent won't see newly created skills until the session restarts. Save state before prompting the restart. On re-entry, `/pos-telegram` (или `/skill:pos-telegram` в Codex) resumes at Step 10.
 
 Write: `rules_skill_installed = true`, `rules_skill_path`, `last_completed_step = 9`.
 
@@ -190,7 +190,7 @@ Write: `wow_moment_mode`, `last_completed_step = 11`.
 
 If `rules_skill_installed` is not true, set `status = "incomplete"` (not "done"). Otherwise set `status = "done"`.
 
-**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from the course path — read from `learner-state.json`, cross-reference with completed blocks, name the specific block and slash command. Mention `/pos-feedback`. If incomplete: tell the user what's missing and how to finish.
+**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` (или `/skill:pos-security` в Codex) as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from the course path — read from `learner-state.json`, cross-reference with completed blocks, name the specific block and slash command. Mention `/pos-feedback` (или `/skill:pos-feedback` в Codex). If incomplete: tell the user what's missing and how to finish.
 
 Write always: `status`, `last_completed_step = 12`. Write only if done: `completed_at`, `learner_profile.vibe_coded_tools_built[] += "pos-telegram"`.
 

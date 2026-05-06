@@ -106,9 +106,9 @@ Hardcoded Russian text. Teach/remind per the two-branch pattern: full teach if s
 ### Step 1 -- Prerequisites and entry
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (from `/pos-diagnostic`). If absent, stop and direct user to run `/pos-diagnostic` first.
-- **Hard:** `arch_blocks.github_setup.status == "done"` -- the dashboard must live in its own git repo pushed to GitHub (Step 6). If not done, write `pending_resume = "pos-dashboard"`, route to `/pos-github-setup`, stop.
-- **Soft:** `arch_blocks.basic_vibecoding.status` -- needed for the pipeline build (dashboard panels, refresher scripts are vibe-coding work). If not done, nudge: the build steps will create automation scripts, which is easier after learning the basics. If the learner opts in, write `pending_resume = "pos-dashboard"`, route to `/pos-basic-vibecoding`, stop. If they decline, proceed -- the agent handles the build using whatever coding skills/superpowers are available.
+- **Hard:** `learner_profile` must exist (from `/pos-diagnostic`). If absent, stop and direct user to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first.
+- **Hard:** `arch_blocks.github_setup.status == "done"` -- the dashboard must live in its own git repo pushed to GitHub (Step 6). If not done, write `pending_resume = "pos-dashboard"`, route to `/pos-github-setup` (или `/skill:pos-github-setup` в Codex), stop.
+- **Soft:** `arch_blocks.basic_vibecoding.status` -- needed for the pipeline build (dashboard panels, refresher scripts are vibe-coding work). If not done, nudge: the build steps will create automation scripts, which is easier after learning the basics. If the learner opts in, write `pending_resume = "pos-dashboard"`, route to `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex), stop. If they decline, proceed -- the agent handles the build using whatever coding skills/superpowers are available.
 - **Soft:** Any sibling skill whose block the user wants on the dashboard (`pos-calendar`, `pos-telegram`, `pos-email`, `pos-tasks`, `pos-vault`, `pos-goals`, `pos-morning-brief`, `pos-day-summary`, `pos-triage`, `pos-advisors`).
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, resume from the next step. If `dashboard_scratch` exists and `status == "done"`, the user was mid-rebuild -- offer to continue rebuild, discard it, or stop. If `pending_route_sibling` is set, check whether that sibling is now done: if done, clear `pending_route_sibling` and `pending_route_panel_id` to null, update the related panel's state from `routed` to `connected`, and resume; if still not done, re-prompt: finish sibling, keep as routed, or remove.
 
@@ -130,8 +130,8 @@ Write: `panels[]` as `{id, learner_label, state: "requested"}` for each named pa
 
 For each panel, classify against the sibling mapping seed and update the panel object:
 - **Sibling done** -> set `state: "connected"`, `source: <capability path>`. Tell the user this card can be wired immediately.
-- **Sibling exists but not done** -> set `state: "routed"`, `source: <sibling slug>`. Offer: (1) go finish that sibling first and return, (2) keep it as "later" and continue, (3) remove from this pass. If the user chooses to go finish: write `pending_route_sibling`, `pending_route_panel_id`, `pending_resume = "pos-dashboard"`, say farewell with `/pos-dashboard` resume command, stop.
-- **No matching sibling** -> set `state: "custom-queued"`, `target_skill: "pos-basic-vibecoding"`, `brief: <one-line description>`. On the first custom-queued panel in this run, teach MM `complexity_from_composition` (or remind) and write `mental_models_taught.complexity_from_composition`. Queue for `/pos-basic-vibecoding`. Tell the user honestly.
+- **Sibling exists but not done** -> set `state: "routed"`, `source: <sibling slug>`. Offer: (1) go finish that sibling first and return, (2) keep it as "later" and continue, (3) remove from this pass. If the user chooses to go finish: write `pending_route_sibling`, `pending_route_panel_id`, `pending_resume = "pos-dashboard"`, say farewell with `/pos-dashboard` (или `/skill:pos-dashboard` в Codex) resume command, stop.
+- **No matching sibling** -> set `state: "custom-queued"`, `target_skill: "pos-basic-vibecoding"`, `brief: <one-line description>`. On the first custom-queued panel in this run, teach MM `complexity_from_composition` (or remind) and write `mental_models_taught.complexity_from_composition`. Queue for `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex). Tell the user honestly.
 
 After classifying all panels, show a summary: which are connected now, which are routed, which are custom-queued. Confirm. If the user edits the list, reclassify changed panels (carry over previously classified panels that survived the edit; clean up orphaned route entries).
 
@@ -201,7 +201,7 @@ Ask the user to point to one live card and name one visible fact. Re-run the sam
 
 If rebuild: swap scratch into `arch_blocks.dashboard`, delete scratch.
 
-Tell the user: to add panels or rebuild later, run `/pos-dashboard`.
+Tell the user: to add panels or rebuild later, run `/pos-dashboard` (or `/skill:pos-dashboard` in Codex).
 
 Set `status = "done"` only if `config_written` is true. If `config_written` is false, set `status = "incomplete"` and tell the user the agent-config section was not written — offer to complete it before closing.
 

@@ -169,7 +169,7 @@ Before closing, offer the extended feedback reminder:
 
 > Если здесь что-то было непонятно, сломано, особенно полезно или если хочется чего-то больше или по-другому, скажи — я помогу оформить фидбек для создателей.
 
-If the learner wants to give feedback, guide them to `/pos-feedback`.
+If the learner wants to give feedback, guide them to `/pos-feedback` (или `/skill:pos-feedback` в Codex).
 
 Tell the learner: when they build new automations in the future, they can run this skill again to add monitoring for the new ones too.
 

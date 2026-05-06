@@ -71,7 +71,7 @@ Read-only dependencies: `learner_profile` (prereq check).
 ### Step 1 — Prerequisites and intro
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic`). If absent, tell the learner to run `/pos-diagnostic` first. Stop.
+- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex)). If absent, tell the learner to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first. Stop.
 - **Soft:** calendar adapter recommended — if done via gogcli with Google, a token-reuse shortcut may be available.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the learner where they left off, pick up from the next step. If `status == "done"`, show a summary (provider, method, mailboxes, scopes, rules path) and offer to exit or start over. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step.
 
@@ -173,7 +173,7 @@ If scopes are read-only, honestly mark which action rules are not currently gran
 
 Present the proposed skill content and target location. Get confirmation. Write and register in the agent runtime (e.g., `~/.claude/skills/` for Claude Code). Then add a one-line reference to the agent config file (CLAUDE.md or AGENTS.md depending on `primary_agent`) telling the agent to load the email-rules skill before any email operation — skills in the registry are only discovered on demand, so without this pointer the agent won't know to load the rules automatically. Present the proposed addition, get confirmation, write.
 
-After writing the skill and the agent config reference, tell the learner to restart the agent (Claude Code or Codex) so the new skill becomes available — the agent won't see newly created skills until the session restarts. Save state before prompting the restart. On re-entry, `/pos-email` resumes at Step 8.
+After writing the skill and the agent config reference, tell the learner to restart the agent (Claude Code or Codex) so the new skill becomes available — the agent won't see newly created skills until the session restarts. Save state before prompting the restart. On re-entry, `/pos-email` (или `/skill:pos-email` в Codex) resumes at Step 8.
 
 Write: `rules_skill_installed = true`, `rules_skill_path`, `last_completed_step = 7`.
 
@@ -193,7 +193,7 @@ Update `my-architecture.md` with an Email section (provider, method, mailboxes, 
 
 Determine status: `done` if all critical end-state items are met — rules skill is installed (rules_skill_installed), architecture doc is updated, adapter is authorized (credentials_path set), at least one personal mailbox connected (mailboxes_connected contains at least one entry with class 'personal'), first read done (first_read_done), live moment completed (wow_moment_done), and if write mode — backup configured (backup_enabled, backup_location set) and action log exists (action_log_path set). Otherwise `incomplete`. If pending mailboxes exist, mention them by address.
 
-**Security handoff.** If `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from `skill-catalog.json` based on diagnostic route.
+**Security handoff.** If `arch_blocks.security.status` is not `done`, recommend `/pos-security` (или `/skill:pos-security` в Codex) as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from `skill-catalog.json` based on diagnostic route.
 
 > Если хочешь оставить обратную связь создателям по поводу этого блока, скажи и я помогу тебе это сделать.
 

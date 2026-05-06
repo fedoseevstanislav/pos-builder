@@ -37,7 +37,7 @@ Fields under `arch_blocks.basic_vibecoding` in `learner-state.json`. `last_compl
 
 On entry: read `learner-state.json`. If `last_completed_step` exists, resume from the next step. Save state as the flow progresses -- write relevant fields immediately at each milestone, not batched to the end.
 
-Pause protocol (any step): write all fields completed so far, keep `status: "not_yet"`, say `«Остановимся здесь. Когда будешь готов продолжить, запусти /pos-basic-vibecoding.»`
+Pause protocol (any step): write all fields completed so far, keep `status: "not_yet"`, say `«Остановимся здесь. Когда будешь готов продолжить, запусти /pos-basic-vibecoding (или /skill:pos-basic-vibecoding в Codex).»`
 
 Mental model entries are written to the top-level `mental_models_taught` registry (not under `arch_blocks`). Each entry: `{ "at": "<ISO8601>", "by_skill": "pos-basic-vibecoding" }`. Slugs: `automation-as-chain`, `stakeholder-sandwich`, `spec-is-contract`, `skills-as-programs`, `spec-drift`. Write each MM entry after it is taught.
 
@@ -58,7 +58,7 @@ All five models taught on the full path. Experienced learners who opt in at Step
 ## Constraints
 
 1. **Diagnostic first.** Refuse to run without `learner-state.json` and confirmed diagnostic (`complete == true`), or explicit learner opt-in to proceed without it.
-2. **GitHub-setup prerequisite.** `arch_blocks.github_setup.status` must be `"done"`. If not, route to `/pos-github-setup`, stop cleanly, resume when the learner returns.
+2. **GitHub-setup prerequisite.** `arch_blocks.github_setup.status` must be `"done"`. If not, route to `/pos-github-setup` (или `/skill:pos-github-setup` в Codex), stop cleanly, resume when the learner returns.
 3. **Experience check before body.** Determine novice/some/experienced before teaching begins. Use `inventory.vibecoding` if available; fall back to in-skill discovery.
 4. **Experienced opt-out at Step 2.** Experienced learners get a pitch of what the block covers and can skip the entire block. If they opt in, they get the same full flow as everyone else.
 5. **Obra default install, explicit opt-out.** Show pack contents; opt-out requires a deliberate "no," not silence.
@@ -78,7 +78,7 @@ All five models taught on the full path. Experienced learners who opt in at Step
 
 Check prerequisites:
 - **Hard:** `learner-state.json` must exist with `complete == true` (populated by `/pos-diagnostic`). If absent or incomplete, offer: run diagnostic first, or proceed without it (explicit opt-in).
-- **Hard:** `arch_blocks.github_setup.status == "done"`. If not, say one short Russian line, route to `/pos-github-setup`, stop.
+- **Hard:** `arch_blocks.github_setup.status == "done"`. If not, say one short Russian line, route to `/pos-github-setup` (или `/skill:pos-github-setup` в Codex), stop.
 - **Resume (done):** If `status == "done"` -- offer show current state / tune (jump to first null field in order: `superpowers_pack_status`, `build_artifact_description`, `agent_config_rules_appended`) / start over / exit.
 - **Resume (skipped):** If `status == "skipped"` -- offer full run (replace entire `arch_blocks.basic_vibecoding` with fresh defaults, restart from Step 2) / show current state / exit.
 - **Resume (in progress):** If `status == "not_yet"` with `last_completed_step` -- tell the learner where they left off, resume from the next step. On resume, verify that Obra is still installed if `last_completed_step >= 3`. If `status == "not_yet"` and `last_completed_step` is missing, treat as fresh start.
@@ -96,7 +96,7 @@ Then do the experience check.
 
 **Experience check.** If `inventory.vibecoding` has `ever_vibe_coded == true` and `git_familiarity` is `some` or `fluent`, confirm with the learner: `«Судя по диагностике, ты уже пробовал вайб-кодинг и с git знаком. Так?»` If absent or incomplete, ask directly: `«Какой у тебя сейчас опыт? 1 -- совсем с нуля. 2 -- что-то пробовал. 3 -- уже делаю уверенно.»`
 
-**Experienced opt-out.** If experienced, pitch what the block covers: how any program breaks down into logical blocks (trigger → input → transformation → output), how requirements define the program, spec-as-contract and spec-drift mental models, Obra Superpowers pack install, and a supervised build of an automation the learner chooses. Ask: `«Хочешь пройти или пропустишь?»` If skip: write `status = "skipped"`, `skipped_at`, `skipped_reason = "experienced -- block skipped"`, `experience_path = "experienced"`, `last_completed_step = 2`, `superpowers_pack_status = null`, `build_artifact_description = null`, `agent_config_rules_appended = false`. Farewell: `«Пропускаем. Когда захочешь пройти -- запусти /pos-basic-vibecoding.»` Stop. If proceed: continue to Step 3, same flow as everyone else.
+**Experienced opt-out.** If experienced, pitch what the block covers: how any program breaks down into logical blocks (trigger → input → transformation → output), how requirements define the program, spec-as-contract and spec-drift mental models, Obra Superpowers pack install, and a supervised build of an automation the learner chooses. Ask: `«Хочешь пройти или пропустишь?»` If skip: write `status = "skipped"`, `skipped_at`, `skipped_reason = "experienced -- block skipped"`, `experience_path = "experienced"`, `last_completed_step = 2`, `superpowers_pack_status = null`, `build_artifact_description = null`, `agent_config_rules_appended = false`. Farewell: `«Пропускаем. Когда захочешь пройти -- запусти /pos-basic-vibecoding (или /skill:pos-basic-vibecoding в Codex).»` Stop. If proceed: continue to Step 3, same flow as everyone else.
 
 **Novice/some:** proceed to Step 3.
 
@@ -169,7 +169,7 @@ Write MM entry: `spec-is-contract`.
 Write MM entry: `skills-as-programs`.
 
 **Obra Superpowers install.** Research the current install method at runtime (do not hardcode). Show a short summary of pack contents (4-6 most relevant skills). Ask whether to install -- default is yes, opt-out requires deliberate "no." Install, verify in the active agent registry. On failure, surface the error in plain Russian, offer retry / skip.
-- If the learner opts out: explain why a skill pack matters even though the coding agent already writes code — the agent can build anything, but for a reliable, structured process (brainstorming before building, specs before code, tests, debugging) you need a framework. Skills encode that framework as reusable process templates. It is much easier to adopt a proven pack than to reinvent process from scratch every session. Then offer reconsider (install after all) or skip the block entirely. On reconsider: install, continue. On skip: write `status = "skipped"`, `skipped_at`, `skipped_reason = "opted out of Obra Superpowers"`, `superpowers_pack_status = "opted_out"`, `last_completed_step = 3`, `build_artifact_description = null`, `agent_config_rules_appended = false`. Farewell: `«Остановимся здесь. Когда захочешь продолжить, запусти /pos-basic-vibecoding.»` Stop. Never fall through to Step 4 with `superpowers_pack_status != "installed"`.
+- If the learner opts out: explain why a skill pack matters even though the coding agent already writes code — the agent can build anything, but for a reliable, structured process (brainstorming before building, specs before code, tests, debugging) you need a framework. Skills encode that framework as reusable process templates. It is much easier to adopt a proven pack than to reinvent process from scratch every session. Then offer reconsider (install after all) or skip the block entirely. On reconsider: install, continue. On skip: write `status = "skipped"`, `skipped_at`, `skipped_reason = "opted out of Obra Superpowers"`, `superpowers_pack_status = "opted_out"`, `last_completed_step = 3`, `build_artifact_description = null`, `agent_config_rules_appended = false`. Farewell: `«Остановимся здесь. Когда захочешь продолжить, запусти /pos-basic-vibecoding (или /skill:pos-basic-vibecoding в Codex).»` Stop. Never fall through to Step 4 with `superpowers_pack_status != "installed"`.
 
 Write: `superpowers_pack_status`, `last_completed_step = 3`.
 
@@ -226,7 +226,7 @@ Write `agent_config_rules_appended = true` immediately -- do not defer.
 
 Write: `status`, `completed_at`, `last_completed_step = 6`.
 
-**Farewell.** Recommend the next block -- check diagnostic route / `my-architecture.md` / skill catalog for the next unfinished block. Name one specific command. Example: `«База готова: ментальные модели на месте, инструменты стоят, первая сборка позади. Дальше -- /pos-vault.»` (always resolve the actual next block before naming a command)
+**Farewell.** Recommend the next block -- check diagnostic route / `my-architecture.md` / skill catalog for the next unfinished block. Name one specific command. Example: `«База готова: ментальные модели на месте, инструменты стоят, первая сборка позади. Дальше -- /pos-vault (или /skill:pos-vault в Codex).»` (always resolve the actual next block before naming a command)
 
 ## Rules
 
