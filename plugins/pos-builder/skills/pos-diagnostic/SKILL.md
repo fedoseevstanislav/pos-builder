@@ -233,7 +233,7 @@ Check: Wait for answer. Three branches:
 
 If `primary_agent == "claude-code"`:
 
-Say: «Сейчас отправлю тебя в настройку. Запусти `/pos-voice-typing`. Когда закончишь, вернись сюда командой `/pos-diagnostic` — продолжим с инвентаризации.»
+Say: «Сейчас отправлю тебя в настройку. Запусти `/pos-voice-typing` (или `/skill:pos-voice-typing` в Codex). Когда закончишь, вернись сюда командой `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) — продолжим с инвентаризации.»
 
 If `primary_agent == "codex"`:
 

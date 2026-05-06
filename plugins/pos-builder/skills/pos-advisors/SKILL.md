@@ -221,7 +221,7 @@ Propose a card refresh schedule: "Карточки советников — эт
 
 Verify all end-state items are met: provider verified, >= 2 finalized persona files on disk, >= 1 decision doc on disk with all required sections, council skill installed and committed. If any check fails, name the gap and route back.
 
-Set `status = "completed"`. Recommend the next block from `learner-state.json` course path. Mention `/pos-feedback` briefly.
+Set `status = "completed"`. Recommend the next block from `learner-state.json` course path. Mention `/pos-feedback` (или `/skill:pos-feedback` в Codex) briefly.
 
 Close:
 
