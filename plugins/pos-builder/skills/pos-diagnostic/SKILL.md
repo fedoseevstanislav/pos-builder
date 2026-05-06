@@ -98,7 +98,7 @@ On every `/pos-diagnostic` invocation, FIRST check the shared state in this orde
      - Begin Phase 1 fresh.
      - Do NOT show the "continue or start over" prompt.
    - Otherwise:
-     - Say: «Сначала рекомендую запустить `/pos-intro`: там коротко объясняется, как устроен курс и что будет дальше. Но если хочешь, можем начать диагностику сразу. Что выбираешь — 1 сначала вводная, 2 сразу диагностика?»
+     - Say: «Сначала рекомендую запустить `/pos-intro` (или `/skill:pos-intro` в Codex): там коротко объясняется, как устроен курс и что будет дальше. Но если хочешь, можем начать диагностику сразу. Что выбираешь — 1 сначала вводная, 2 сразу диагностика?»
      - Check: Wait for `1` or `2`.
      - `1` → Say: «Ок. Сначала запусти `/pos-intro` (или `/skill:pos-intro` в Codex), потом возвращайся сюда.» Stop.
      - `2` → Begin Phase 1 fresh.
@@ -479,17 +479,17 @@ Determine which is the next uncompleted foundation skill by checking state: `arc
 
 Action: Offer the next foundation skill. For the first run this is always memory-basics:
 
-«Следующий шаг — `/pos-memory-basics`: настроим базовую память агента, чтобы он не начинал каждую сессию с чистого листа. После этого — хранилище знаний и трекер задач. Это фундамент для всего остального. Готов(а)?»
+«Следующий шаг — `/pos-memory-basics` (или `/skill:pos-memory-basics` в Codex): настроим базовую память агента, чтобы он не начинал каждую сессию с чистого листа. После этого — хранилище знаний и трекер задач. Это фундамент для всего остального. Готов(а)?»
 
 Check: Wait for answer.
 
 If **yes** →
 
-Action: Say the concrete command: «Запускай `/<command>` — начнём с этого. Если потом захочешь оставить фидбек по диагностике — скажи, я помогу оформить.»
+Action: Say the concrete command: «Запускай `/<command>` (или `/skill:<command>` в Codex) — начнём с этого. Если потом захочешь оставить фидбек по диагностике — скажи, я помогу оформить.»
 
 If **no** →
 
-Action: «Ок, всё сохранено. Когда будешь готов(а) — запусти `/<command>`. Если что-то было непонятно или хочется по-другому — `/pos-feedback`.»
+Action: «Ок, всё сохранено. Когда будешь готов(а) — запусти `/<command>` (или `/skill:<command>` в Codex). Если что-то было непонятно или хочется по-другому — `/pos-feedback` (или `/skill:pos-feedback` в Codex).»
 
 ## Rules
 

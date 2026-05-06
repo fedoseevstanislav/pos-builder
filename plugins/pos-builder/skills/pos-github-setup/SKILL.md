@@ -138,7 +138,7 @@ Codex variant (`codex`):
 ### Step 1 -- Entry and resume
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (from `/pos-diagnostic`). If absent, tell the learner to run diagnostic first. Stop.
+- **Hard:** `learner_profile` must exist (from `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex)). If absent, tell the learner to run diagnostic first. Stop.
 - **Incomplete diagnostic:** if `learner-state.json` exists and `complete != true` (diagnostic started but not finished): offer 1 run/continue diagnostic first, 2 continue without full diagnostic (explicit opt-in required).
 - **Soft:** if `learner-state.json` exists but has no `arch_blocks.github_setup`, offer: 1 run diagnostic first, 2 continue without it.
 - **Done:** if `status == "done"`, tell the learner GitHub setup is already complete. Stop.
@@ -156,7 +156,7 @@ Deliver verbatim in Russian as a single block:
 >
 > GitHub – по большому счёту то же самое, только для совместной работы. Git и GitHub – как локальный Word и Google Doc. Это не единственный такой инструмент, но наиболее распространенный на сегодня.
 >
-> GitHub Issues (буквально «проблемы», в русской версии GitHub «задачи») это встроенный в GitHub механизм управления задачами. Он простой, очень гибкий, и бесплатный – идеальный вариант для того, чтобы начать вести задачи для своих агентов. Если у тебя уже пройден /pos-vault, то ты уже знаешь, что LLM ничего, совсем ничего не запоминают и всё, что может пригодиться в работе потом необходимо записывать. GitHub Issues это простой способ сделать своего рода внешнюю память по тому, что сделано, с каким результатом, и что еще предстоит.
+> GitHub Issues (буквально «проблемы», в русской версии GitHub «задачи») это встроенный в GitHub механизм управления задачами. Он простой, очень гибкий, и бесплатный – идеальный вариант для того, чтобы начать вести задачи для своих агентов. Если у тебя уже пройден /pos-vault (или /skill:pos-vault в Codex), то ты уже знаешь, что LLM ничего, совсем ничего не запоминают и всё, что может пригодиться в работе потом необходимо записывать. GitHub Issues это простой способ сделать своего рода внешнюю память по тому, что сделано, с каким результатом, и что еще предстоит.
 >
 > Конечно, работать со всем этим ты будешь не своими руками, а через агента. Он сам будет делать коммиты, сам будет создавать, изменять и закрывать задачи.
 >

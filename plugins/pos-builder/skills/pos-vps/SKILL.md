@@ -65,7 +65,7 @@ Read-only dependencies: `learner_profile` (diagnostic must be complete). Soft: `
 ### Step 1 — Prerequisites and entry
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist. If absent, tell the user to run `/pos-diagnostic` first. Stop.
+- **Hard:** `learner_profile` must exist. If absent, tell the user to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first. Stop.
 - **Soft:** `arch_blocks.obsidian_vault.path`. If present, note it for later (architecture doc, automation output paths). If absent, proceed -- VPS does not depend on vault.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, pick up from the next step. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step.
 - **Host-reachability guard:** If `host` is populated but does not respond to SSH, ask the user: (a) retry — maybe the server is temporarily unreachable, (b) mark current VPS state incomplete and start fresh from provider selection, or (c) exit now and re-run `/pos-vps` (or `/skill:pos-vps` in Codex) when ready.
@@ -225,7 +225,7 @@ Write: `last_completed_step = 11`.
 
 **Next block.** Recommend next block: read diagnostic route from `learner-state.json`, cross-reference with completed blocks, name the specific block and slash command. Connect the recommendation to what VPS enables (e.g., "now you have a machine that can run briefings while you sleep").
 
-Mention `/pos-feedback`.
+Mention `/pos-feedback` (или `/skill:pos-feedback` в Codex).
 
 Write always: `status`, `last_completed_step = 12`. Write only if done: `completed_at`.
 

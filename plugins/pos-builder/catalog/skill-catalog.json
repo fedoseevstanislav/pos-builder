@@ -124,7 +124,7 @@
       "bundle_path": "skills/pos-github-setup/SKILL.md",
       "menu_description": "Use when the learner types `/pos-github-setup`, asks to set up GitHub for the course, or needs issue-based course memory before later build steps.",
       "state_branch": "arch_blocks.github_setup",
-      "primary_use_case_id": null,
+      "primary_use_case_id": 10,
       "related_block_ids": [
         20,
         101

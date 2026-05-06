@@ -67,14 +67,14 @@ Four models taught at natural moments in the flow. For each: if slug not in `men
 
 ### Step 1 — Prerequisites and intro
 
-Check `learner_profile` first. If absent, tell the learner to run `/pos-diagnostic` first and stop.
+Check `learner_profile` first. If absent, tell the learner to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first and stop.
 
 Check hard prerequisites. Each missing one gets its own Russian explanation of why it blocks triage:
 - **pos-goals** missing → «без него непонятно, что для тебя вообще важнее»
 - **pos-telegram** missing → «без живого Telegram-потока здесь нечего ранжировать»
 - **pos-calendar** missing → «без ближайшего календаря триаж будет слепым к тому, что уже стоит в дне»
 
-If any hard prereq is missing, name the missing `/pos-*` commands and stop. Do not continue.
+If any hard prereq is missing, name the missing `/pos-*` commands (or `/skill:pos-*` in Codex) and stop. Do not continue.
 
 Check soft prerequisites: **pos-basic-vibecoding** (dev tools), **pos-email** (additional surface). For each missing one, explain in one sentence why it helps, then let the learner choose: do it first or proceed without. If the learner chooses to do a soft prereq first, write `pending_resume = "pos-triage"` before stopping.
 

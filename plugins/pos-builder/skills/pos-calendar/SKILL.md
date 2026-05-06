@@ -69,7 +69,7 @@ Read-only dependencies: `learner_profile` (prereq check).
 ### Step 1 — Prerequisites and entry
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic`). If absent, tell the learner to run `/pos-diagnostic` first. Stop.
+- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex)). If absent, tell the learner to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first. Stop.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the learner where they left off, pick up from the next step. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step.
 
 Read diagnostic hints: which calendar provider is in `inventory`, whether multiple providers are mentioned, personal vs work signals, whether the learner has a VPS, `stt_status`.
@@ -188,7 +188,7 @@ Present the proposed skill content and target location. Get confirmation. Write 
 
 If the learner refuses to write rules entirely: research the correct revocation procedure for the learner's credential storage type before executing rollback. Roll back write access to read-only, set `status = "incomplete"`, skip to Step 9.
 
-After writing the skill and the CLAUDE.md reference, tell the learner to restart Claude Code so the new skill becomes available. The agent won't see newly created skills until the session restarts. Save state before prompting the restart. On re-entry, `/pos-calendar` resumes at Step 9.
+After writing the skill and the CLAUDE.md reference, tell the learner to restart Claude Code so the new skill becomes available. The agent won't see newly created skills until the session restarts. Save state before prompting the restart. On re-entry, `/pos-calendar` (или `/skill:pos-calendar` в Codex) resumes at Step 9.
 
 Write: `rules_skill_installed = true`, `rules_skill_path`, `last_completed_step = 8`.
 
@@ -204,7 +204,7 @@ Re-read the calendar (fresh, not cached). Answer the question. If write-enabled 
 
 **State and handoff.** Determine status: `done` if all critical end-state items are met — rules skill is installed (rules_skill_installed), architecture doc is updated, adapter is authorized (credentials_path set), first read is done (calendars_connected non-empty), live moment completed (live_moment_done), and if write mode — backup configured (backup_enabled, backup_location set) and action log exists (action_log_path set). Otherwise `incomplete`.
 
-**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from `skill-catalog.json` based on diagnostic route.
+**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` (или `/skill:pos-security` в Codex) as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from `skill-catalog.json` based on diagnostic route.
 
 > Если хочешь оставить обратную связь создателям по поводу этого блока, скажи и я помогу тебе это сделать.
 

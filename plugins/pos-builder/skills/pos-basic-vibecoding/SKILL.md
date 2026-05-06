@@ -58,7 +58,7 @@ All five models taught on the full path. Experienced learners who opt in at Step
 ## Constraints
 
 1. **Diagnostic first.** Refuse to run without `learner-state.json` and confirmed diagnostic (`complete == true`), or explicit learner opt-in to proceed without it.
-2. **GitHub-setup prerequisite.** `arch_blocks.github_setup.status` must be `"done"`. If not, route to `/pos-github-setup`, stop cleanly, resume when the learner returns.
+2. **GitHub-setup prerequisite.** `arch_blocks.github_setup.status` must be `"done"`. If not, route to `/pos-github-setup` (или `/skill:pos-github-setup` в Codex), stop cleanly, resume when the learner returns.
 3. **Experience check before body.** Determine novice/some/experienced before teaching begins. Use `inventory.vibecoding` if available; fall back to in-skill discovery.
 4. **Experienced opt-out at Step 2.** Experienced learners get a pitch of what the block covers and can skip the entire block. If they opt in, they get the same full flow as everyone else.
 5. **Obra default install, explicit opt-out.** Show pack contents; opt-out requires a deliberate "no," not silence.
@@ -78,7 +78,7 @@ All five models taught on the full path. Experienced learners who opt in at Step
 
 Check prerequisites:
 - **Hard:** `learner-state.json` must exist with `complete == true` (populated by `/pos-diagnostic`). If absent or incomplete, offer: run diagnostic first, or proceed without it (explicit opt-in).
-- **Hard:** `arch_blocks.github_setup.status == "done"`. If not, say one short Russian line, route to `/pos-github-setup`, stop.
+- **Hard:** `arch_blocks.github_setup.status == "done"`. If not, say one short Russian line, route to `/pos-github-setup` (или `/skill:pos-github-setup` в Codex), stop.
 - **Resume (done):** If `status == "done"` -- offer show current state / tune (jump to first null field in order: `superpowers_pack_status`, `build_artifact_description`, `agent_config_rules_appended`) / start over / exit.
 - **Resume (skipped):** If `status == "skipped"` -- offer full run (replace entire `arch_blocks.basic_vibecoding` with fresh defaults, restart from Step 2) / show current state / exit.
 - **Resume (in progress):** If `status == "not_yet"` with `last_completed_step` -- tell the learner where they left off, resume from the next step. On resume, verify that Obra is still installed if `last_completed_step >= 3`. If `status == "not_yet"` and `last_completed_step` is missing, treat as fresh start.
@@ -226,7 +226,7 @@ Write `agent_config_rules_appended = true` immediately -- do not defer.
 
 Write: `status`, `completed_at`, `last_completed_step = 6`.
 
-**Farewell.** Recommend the next block -- check diagnostic route / `my-architecture.md` / skill catalog for the next unfinished block. Name one specific command. Example: `«База готова: ментальные модели на месте, инструменты стоят, первая сборка позади. Дальше -- /pos-vault.»` (always resolve the actual next block before naming a command)
+**Farewell.** Recommend the next block -- check diagnostic route / `my-architecture.md` / skill catalog for the next unfinished block. Name one specific command. Example: `«База готова: ментальные модели на месте, инструменты стоят, первая сборка позади. Дальше -- /pos-vault (или /skill:pos-vault в Codex).»` (always resolve the actual next block before naming a command)
 
 ## Rules
 

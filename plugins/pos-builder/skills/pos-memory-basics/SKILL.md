@@ -65,7 +65,7 @@ Read-only (except first-session detection): `learner_profile.primary_agent`, `le
 
 Read `learner-state.json`. Resolve runtime per State section above. Check `arch_blocks.intro` and `arch_blocks.diagnostic` — if either is missing or not done, suggest completing them first but proceed if the learner wants to continue. Do NOT read or check my-architecture.md, CLAUDE.md, or vault/github-setup state at this stage.
 
-- **Done:** if `status == "done"`, tell the learner memory basics is complete, offer to route to `/pos-vault` or `/pos-github-setup`. If they want to review their rules file, re-enter Step 4 in review mode. Stop.
+- **Done:** if `status == "done"`, tell the learner memory basics is complete, offer to route to `/pos-vault` (или `/skill:pos-vault` в Codex) or `/pos-github-setup` (или `/skill:pos-github-setup` в Codex). If they want to review their rules file, re-enter Step 4 in review mode. Stop.
 - **Resume:** if `last_completed_step` exists, recap what's done (rules file created? layers taught?) in 1-2 sentences in Russian, e.g. «В прошлый раз мы разобрали три слоя памяти. Продолжаем с создания файла правил.» If `rules_file_exists == true`, verify that the file at `rules_file_path` is still on disk. If missing, return to Step 4. Otherwise resume from next step.
 - **Fresh start:** write `status = "in_progress"`, `last_completed_step = 1`. Proceed directly to Step 2.
 
@@ -83,7 +83,7 @@ Introduce the three layers using this framing:
 2. **База знаний** (vault / заметки / Obsidian) — долгосрочные знания, которые агент может найти и использовать.
 3. **Трекер задач** (GitHub Issues / любой таск-трекер) — что сделано, что в работе, что дальше. Так ничего не потеряется между сессиями.
 
-The common thread: all three persist between sessions — local files (layers 1-2) or cloud state (layer 3). The agent can access them next time without the learner repeating anything. Today we build layer 1 — the rules file. The other two are `/pos-vault` (knowledge) and `/pos-github-setup` (task tracking).
+The common thread: all three persist between sessions — local files (layers 1-2) or cloud state (layer 3). The agent can access them next time without the learner repeating anything. Today we build layer 1 — the rules file. The other two are `/pos-vault` (или `/skill:pos-vault` в Codex) (knowledge) and `/pos-github-setup` (или `/skill:pos-github-setup` в Codex) (task tracking).
 
 Write: `three_layers_taught = true`, `last_completed_step = 3`.
 
@@ -111,7 +111,7 @@ Write: `learner_can_explain = true/false`, `last_completed_step = 5`.
 
 Summarize in Russian: the agent now has personality — a rules file it reads every session. Two more layers ahead:
 
-> «Теперь у твоего агента есть „личность" — файл правил, который он читает при каждом старте. Это первый слой памяти. Впереди ещё два: база знаний (чтобы агент мог находить нужную информацию) и трекер задач (чтобы не терять, что сделано и что дальше). Когда будешь готов — `/pos-vault` для базы знаний, `/pos-github-setup` для трекера задач.»
+> «Теперь у твоего агента есть „личность" — файл правил, который он читает при каждом старте. Это первый слой памяти. Впереди ещё два: база знаний (чтобы агент мог находить нужную информацию) и трекер задач (чтобы не терять, что сделано и что дальше). Когда будешь готов — `/pos-vault` (или `/skill:pos-vault` в Codex) для базы знаний, `/pos-github-setup` (или `/skill:pos-github-setup` в Codex) для трекера задач.»
 
 Write: `status = "done"`, `completed_at`, `last_completed_step = 6`.
 
@@ -122,4 +122,4 @@ Write: `status = "done"`, `completed_at`, `last_completed_step = 6`.
 3. **Learner writes, agent structures.** Ask questions to draw content out. Never dictate what should be in their rules file.
 4. **Concrete over abstract.** Show the learner their own files, their own agent behavior. Don't lecture about memory in general.
 5. **Short session.** This block should take 10-15 minutes. Don't pad. If the learner gets it, move forward.
-6. **Clear next steps.** Always end with concrete routing: `/pos-vault` or `/pos-github-setup`.
+6. **Clear next steps.** Always end with concrete routing: `/pos-vault` (или `/skill:pos-vault` в Codex) or `/pos-github-setup` (или `/skill:pos-github-setup` в Codex).

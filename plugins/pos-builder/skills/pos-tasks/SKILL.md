@@ -93,14 +93,14 @@ None. This block does not teach new mental models. The learner already knows `ad
 18. **One main tracker.** Exactly one declared tracker has `is_agent_memory_home: true`.
 19. **Audit third-party code before installing.** Before installing any MCP server, CLI tool, or library: check for known security vulnerabilities (CVEs, advisories, disclosed incidents), research others' experience with it, and inspect the source code to verify it only communicates with its declared endpoints -- no telemetry, no third-party data exfiltration, no unexpected network calls. Report findings to the learner as part of the tool choice.
 20. **Deterministic action log.** Every task tracker write (creates, edits, comments, labels, closes, archives) must be logged to an append-only JSONL action log. The log must be produced by the tool layer (wrapper script or logging proxy), not by the agent. For CLI tools: build a wrapper that appends to the log on every call. For MCP servers: build a thin logging proxy that intercepts tool calls, logs them, and forwards to the real server. Read-only access before the log is set up is allowed.
-21. **Superpowers soft dependency.** Creating per-tracker skills requires the superpowers skill-authoring tooling. If `arch_blocks.basic_vibecoding.status != "done"`, offer to hand off to `/pos-basic-vibecoding` first, or proceed if the learner confirms they have superpowers installed another way.
+21. **Superpowers soft dependency.** Creating per-tracker skills requires the superpowers skill-authoring tooling. If `arch_blocks.basic_vibecoding.status != "done"`, offer to hand off to `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) first, or proceed if the learner confirms they have superpowers installed another way.
 
 ## Flow
 
 ### Step 1 -- Prerequisites and entry
 
 Check prerequisites:
-- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic`). If absent, tell the user to run `/pos-diagnostic` first. Stop.
+- **Hard:** `learner_profile` must exist (populated by `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex)). If absent, tell the user to run `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex) first. Stop.
 - **Resume:** Handle resume branches:
   - `pending_resume == "pos-tasks-after-github-setup"` → GitHub setup is now done; continue from Step 2.
   - `pending_resume == "pos-tasks-after-vibecoding"` → Vibecoding setup is now done; continue from Step 5.
@@ -132,7 +132,7 @@ Show the filtered list. Ask if it looks right or needs adjusting.
 
 Mark exactly one entry as `is_agent_memory_home: true`.
 
-**GitHub routing gate:** If main tracker is GitHub Issues and `arch_blocks.github_setup.status != "done"`, explain the handoff, write `pending_resume = "pos-tasks-after-github-setup"` and `last_completed_step = 2`, invoke `/pos-github-setup`. Stop here.
+**GitHub routing gate:** If main tracker is GitHub Issues and `arch_blocks.github_setup.status != "done"`, explain the handoff, write `pending_resume = "pos-tasks-after-github-setup"` and `last_completed_step = 2`, invoke `/pos-github-setup` (или `/skill:pos-github-setup` в Codex). Stop here.
 
 Write: `declared_trackers`, `last_completed_step = 2`.
 
@@ -166,7 +166,7 @@ Write: `scopes_granted`, `hard_delete_enabled`, `last_completed_step = 4`.
 
 ### Step 5 -- Routing pointer, per-tracker skills, baseline, and attribution
 
-**Superpowers gate.** Check `arch_blocks.basic_vibecoding.status`. If not `"done"`, explain that creating per-tracker operational skills requires the superpowers skill-authoring tooling (installed during the vibecoding block). Offer: hand off to `/pos-basic-vibecoding` (write `pending_resume = "pos-tasks-after-vibecoding"`), or confirm superpowers are already available by another path. If handoff: stop here.
+**Superpowers gate.** Check `arch_blocks.basic_vibecoding.status`. If not `"done"`, explain that creating per-tracker operational skills requires the superpowers skill-authoring tooling (installed during the vibecoding block). Offer: hand off to `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) (write `pending_resume = "pos-tasks-after-vibecoding"`), or confirm superpowers are already available by another path. If handoff: stop here.
 
 **Context-efficiency teaching moment.** Before writing anything, explain the two-layer architecture to the learner:
 - The agent-config file (CLAUDE.md / AGENTS.md) is loaded every single session, even when the agent is doing something completely unrelated to tasks. Anything written there costs context tokens every time. So it should contain only a minimal routing pointer: which trackers exist, what each is for, which is primary.
@@ -212,7 +212,7 @@ Keep the pointer as short as possible (Constraint 12). Resolve target file from 
 
 If approved: append to target file. If sync enabled, mirror to sibling.
 
-After writing the pointer, tell the learner to restart the agent so the new section becomes active. Save state before prompting the restart. On re-entry, `/pos-tasks` resumes at Step 6.
+After writing the pointer, tell the learner to restart the agent so the new section becomes active. Save state before prompting the restart. On re-entry, `/pos-tasks` (или `/skill:pos-tasks` в Codex) resumes at Step 6.
 
 Write: `routing_pointer_status`, `routing_pointer_appended_to`, `last_completed_step = 5`.
 
@@ -245,7 +245,7 @@ If done: set `completed_at`. Clear `pending_resume`.
 
 **Summary and next block.** Summarize what was accomplished: which trackers are connected, which is main, whether write is enabled, which skills were created. If deferred trackers exist: name them, say they can be connected by running `/pos-tasks` (or `/skill:pos-tasks` in Codex) again. If gap notes: mention loose ends.
 
-**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from the skill catalog. Do not recommend `/pos-tasks` itself. Tell the learner which block comes next. Ask if they want to jump or take a break. On pause: everything is saved.
+**Security handoff.** If status is done and `arch_blocks.security.status` is not `done`, recommend `/pos-security` (или `/skill:pos-security` в Codex) as the priority next step — the learner just connected an inbound surface that handles untrusted external content. If security is already done, recommend the next block from the skill catalog. Do not recommend `/pos-tasks` itself. Tell the learner which block comes next. Ask if they want to jump or take a break. On pause: everything is saved.
 
 Write: `status`, `completed_at` (if done), `gaps[]`, `last_completed_step = 7`.
 

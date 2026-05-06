@@ -58,7 +58,7 @@ On entry: read `learner-state.json`. Check `last_completed_step` and resume from
 5. **Staleness insertion is unconditional.** When life-goal or priority staleness crosses its threshold (weekly 10d, monthly 40d, life goals 60d), the brief MUST include a dedicated staleness line regardless of chosen composition. The learner cannot opt out of staleness warnings — they are safety, not content.
 6. **No silent delivery failure.** Failures reach the learner via the declared alert surface. Output suppression forbidden.
 7. **No proactive two-way Telegram.** The brief is one-directional by default. Two-way TG interaction is mentioned only if the learner explicitly asks.
-8. **No inline goals fallback.** If goals are not done, the only path is hard route to `/pos-goals`. No "let me quickly ask about goals" shortcut.
+8. **No inline goals fallback.** If goals are not done, the only path is hard route to `/pos-goals` (или `/skill:pos-goals` в Codex). No "let me quickly ask about goals" shortcut.
 9. **Learner controls content.** If the learner redirects away from the agent's starter offer, the agent follows — even if dropping starter-default items. No overriding.
 10. **No silent adapter selection.** Which sources the brief reads and which channels it delivers to are both confirmed with the learner.
 12. **Audit third-party code.** Before installing any scheduler helper, delivery library, or dependency: check for known vulnerabilities and inspect source code. Report findings to the learner.
@@ -70,11 +70,11 @@ On entry: read `learner-state.json`. Check `last_completed_step` and resume from
 ### Step 1 — Prerequisites and entry
 
 Check prerequisites:
-- **Hard:** `arch_blocks.goals.status == "done"`, `arch_blocks.calendar.status == "done"`, `arch_blocks.tasks.status == "done"`. Check in this order, stop on the first miss. Tell the learner in one Russian sentence what's missing and which `/pos-*` command to run. Write `pending_resume = "pos-morning-brief"` before handing off. Stop.
-- **Hard:** `learner_profile` must exist. If absent, route to `/pos-diagnostic`.
-- **Soft:** `arch_blocks.github_setup.status` — needed for the automation project repo. If not done, nudge: automation artifacts (scripts, prompts, systemd units) live in a version-controlled project so the learner can track changes and recover from breakage. If the learner opts in, write `pending_resume = "pos-morning-brief"`, route to `/pos-github-setup`, stop. If they decline, proceed — artifacts will be created locally without a repo.
+- **Hard:** `arch_blocks.goals.status == "done"`, `arch_blocks.calendar.status == "done"`, `arch_blocks.tasks.status == "done"`. Check in this order, stop on the first miss. Tell the learner in one Russian sentence what's missing and which `/pos-*` (или `/skill:pos-*` в Codex) command to run. Write `pending_resume = "pos-morning-brief"` before handing off. Stop.
+- **Hard:** `learner_profile` must exist. If absent, route to `/pos-diagnostic` (или `/skill:pos-diagnostic` в Codex).
+- **Soft:** `arch_blocks.github_setup.status` — needed for the automation project repo. If not done, nudge: automation artifacts (scripts, prompts, systemd units) live in a version-controlled project so the learner can track changes and recover from breakage. If the learner opts in, write `pending_resume = "pos-morning-brief"`, route to `/pos-github-setup` (или `/skill:pos-github-setup` в Codex), stop. If they decline, proceed — artifacts will be created locally without a repo.
 - **Soft:** `arch_blocks.email.status` and `arch_blocks.telegram.status` — note which are available as optional sources. If neither is connected, the brief still runs on calendar + tasks.
-- **Soft:** `arch_blocks.basic_vibecoding.status` — needed for the pipeline build (scripts, prompts, systemd units are vibe-coding work). If not done, nudge: the build step will create small automation scripts, which is easier after learning the basics. If the learner opts in, write `pending_resume = "pos-morning-brief"`, route to `/pos-basic-vibecoding`, stop. If they decline, proceed — the agent handles the build using whatever coding skills/superpowers are available.
+- **Soft:** `arch_blocks.basic_vibecoding.status` — needed for the pipeline build (scripts, prompts, systemd units are vibe-coding work). If not done, nudge: the build step will create small automation scripts, which is easier after learning the basics. If the learner opts in, write `pending_resume = "pos-morning-brief"`, route to `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex), stop. If they decline, proceed — the agent handles the build using whatever coding skills/superpowers are available.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the learner where they left off, pick up from the next step. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step. If `status == "done"`, summarize current setup and offer to tweak or rebuild.
 
 Deliver verbatim in Russian (fresh start only):
@@ -106,9 +106,9 @@ Detect which delivery channels are currently reachable. Standard candidates are 
 - **Email** — письмо на почту
 For discovered channels, explain what they are and how delivery would work in plain Russian.
 
-If no channel is reachable at all, offer handoff to the relevant skill (e.g., `/pos-basic-vibecoding` for TG bot, `/pos-email` for email). Write `pending_resume = "pos-morning-brief"` and stop.
+If no channel is reachable at all, offer handoff to the relevant skill (e.g., `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) for TG bot, `/pos-email` (или `/skill:pos-email` в Codex) for email). Write `pending_resume = "pos-morning-brief"` and stop.
 
-If the learner picks Telegram delivery but no send-capable bot exists and basic-vibecoding isn't done, hand off to `/pos-basic-vibecoding` with `pending_resume`.
+If the learner picks Telegram delivery but no send-capable bot exists and basic-vibecoding isn't done, hand off to `/pos-basic-vibecoding` (или `/skill:pos-basic-vibecoding` в Codex) with `pending_resume`.
 
 Learner chooses channel(s). If multiple, ask which is primary (the one verified in the wow moment).
 
@@ -204,4 +204,4 @@ Write: `status`, `completed_at` (if done), `last_completed_step = 10`.
 4. **Transparency before action.** Before any build step that touches disk, network, or services, tell the learner in one short Russian sentence what's about to happen.
 5. **Present -> confirm -> write.** Config files, scheduler installations — show proposed content, get confirmation, then write.
 6. **This skill composes, not configures.** If a prerequisite adapter needs reconfiguration, hand off to that skill. Do not reconfigure calendar, email, or telegram inline.
-7. **Feedback on demand only.** If the learner wants to leave feedback, route to `/pos-feedback`. No front-loaded reminders.
+7. **Feedback on demand only.** If the learner wants to leave feedback, route to `/pos-feedback` (или `/skill:pos-feedback` в Codex). No front-loaded reminders.
