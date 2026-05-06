@@ -68,7 +68,7 @@ Check prerequisites:
 - **Hard:** `learner_profile` must exist. If absent, tell the user to run `/pos-diagnostic` first. Stop.
 - **Soft:** `arch_blocks.obsidian_vault.path`. If present, note it for later (architecture doc, automation output paths). If absent, proceed -- VPS does not depend on vault.
 - **Resume:** If `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, pick up from the next step. If `status == "incomplete"`, check which end-state items are missing and resume at the relevant step.
-- **Host-reachability guard:** If `host` is populated but does not respond to SSH, ask the user: (a) retry — maybe the server is temporarily unreachable, (b) mark current VPS state incomplete and start fresh from provider selection, or (c) exit now and re-run `/pos-vps` when ready.
+- **Host-reachability guard:** If `host` is populated but does not respond to SSH, ask the user: (a) retry — maybe the server is temporarily unreachable, (b) mark current VPS state incomplete and start fresh from provider selection, or (c) exit now and re-run `/pos-vps` (or `/skill:pos-vps` in Codex) when ready.
 
 Write (fresh start only): `status = "in_progress"`, `last_completed_step = 1`.
 
@@ -171,7 +171,7 @@ If primary is Codex:
 1. Tell the user what happened (exact error).
 2. Check list: API key valid? Network connectivity OK? If Claude Code -- is `api.anthropic.com` reachable from the VPS (geo-block)?
 3. One retry after the user confirms the fix.
-4. If retry fails: do not mark the step complete. Tell the user the VPS is usable but agent auth needs to be resolved. Re-running `/pos-vps` resumes here.
+4. If retry fails: do not mark the step complete. Tell the user the VPS is usable but agent auth needs to be resolved. Re-running `/pos-vps` (or `/skill:pos-vps` in Codex) resumes here.
 
 **Second agent (optional):**
 
@@ -201,7 +201,7 @@ After success, deliver verbatim in Russian:
 
 > Это первый живой кусок твоей персональной системы. Ты пишешь в Telegram — система отвечает через своего агента, даже когда ноутбук закрыт. Это уже не план, это работает.
 
-Write `last_completed_step = 10` only after a confirmed successful bot response. If troubleshooting fails and the user cannot get a response, leave `last_completed_step = 9` -- re-running `/pos-vps` resumes at this step.
+Write `last_completed_step = 10` only after a confirmed successful bot response. If troubleshooting fails and the user cannot get a response, leave `last_completed_step = 9` -- re-running `/pos-vps` (or `/skill:pos-vps` in Codex) resumes at this step.
 
 ### Step 11 — Migrate existing automations
 

@@ -110,7 +110,7 @@ Write: `connection_method`, `last_completed_step = 3`.
 
 ### Step 4 — Install and authorize (read-only)
 
-Before starting credential setup, check if the learner has time — on "not now", save state and tell them to resume with `/pos-calendar`.
+Before starting credential setup, check if the learner has time — on "not now", save state and tell them to resume with `/pos-calendar` (or `/skill:pos-calendar` in Codex).
 
 Teach scopes concept (if `mental_models_taught.scopes-risk` is absent):
 
@@ -220,4 +220,4 @@ Write: `status`, `completed_at` (if done), `last_completed_step = 9`, `live_mome
 6. **Skip pre-answered questions.** If the learner already stated their provider, OS, or preference earlier in this session, do not re-ask. Confirm and proceed.
 7. **One mental model at a time.** Never stack two new concepts in one learner-visible beat.
 8. **Pre-warn predictable anxiety.** If the next step will show an "app not verified" warning, a broader-than-expected scope list, or a terminal command after promising minimal terminal work — warn one sentence before it appears.
-9. **After a pause farewell, stop.** Do not continue the skill flow; if the learner asks a new question, direct them to re-invoke `/pos-calendar`.
+9. **After a pause farewell, stop.** Do not continue the skill flow; if the learner asks a new question, direct them to re-invoke `/pos-calendar` (or `/skill:pos-calendar` in Codex).

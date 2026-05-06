@@ -61,12 +61,12 @@ On every `/pos-feedback` invocation, read `learner-state.json` first and branch:
    - Check: `«Напиши номер.»`
    - `1` -> resume from `current_phase` when valid (`1..4`), else Phase 1.
    - `2` -> reset only `arch_blocks.feedback` to fresh shape and start Phase 1.
-   - `3` -> Say: `«Ок, остановимся здесь. Вернуться можно командой `/pos-feedback`.»` and stop.
+   - `3` -> Say: `«Ок, остановимся здесь. Вернуться можно командой `/pos-feedback` (или `/skill:pos-feedback` в Codex).»` and stop.
 3. If `arch_blocks.feedback.status == "done"`:
    - Say: `«Последний фидбек уже отправлен. Что делаем: 1 отправить новый, 2 показать прошлую ссылку, 3 выйти?»`
    - Check: `«Напиши номер.»`
    - `1` -> reset only `arch_blocks.feedback` to fresh shape and start Phase 1.
-   - `2` -> Say: `«Вот ссылка: <last_issue_url>. Если нужен новый фидбек, запусти `/pos-feedback` ещё раз и выбери 1.»` then stop.
+   - `2` -> Say: `«Вот ссылка: <last_issue_url>. Если нужен новый фидбек, запусти `/pos-feedback` (или `/skill:pos-feedback` в Codex) ещё раз и выбери 1.»` then stop.
    - `3` -> Say: `«Ок, остановимся здесь.»` then stop.
 
 ---

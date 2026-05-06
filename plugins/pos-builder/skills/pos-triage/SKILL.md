@@ -39,7 +39,7 @@ Fields in `learner-state.json` under `arch_blocks.triage`. `last_completed_step`
 
 Read-only dependencies: `learner_profile` (prereq check, primary agent), `arch_blocks.{goals,telegram,calendar,email,basic_vibecoding}`.
 
-On entry: read `learner-state.json`. If `status == "in_progress"` AND `last_completed_step == 8` AND `commit_at_close == "deferred"`, ask whether the learner has committed since last time. If yes → set `status = "done"`, `completed_at`, recommend next block. If no → remind them to commit and re-run `/pos-triage` when ready, then stop. Otherwise, if `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, resume from the next step.
+On entry: read `learner-state.json`. If `status == "in_progress"` AND `last_completed_step == 8` AND `commit_at_close == "deferred"`, ask whether the learner has committed since last time. If yes → set `status = "done"`, `completed_at`, recommend next block. If no → remind them to commit and re-run `/pos-triage` (or `/skill:pos-triage` in Codex) when ready, then stop. Otherwise, if `status == "in_progress"`, read `last_completed_step`, tell the user where they left off, resume from the next step.
 
 ## Mental models
 
@@ -170,7 +170,7 @@ Ask if the learner wants to add anything later (other surfaces, work rules, futu
 
 **Architecture doc update (mandatory).** Resolve `POS_HOME` from `$POS_HOME` env var, falling back to `~/.pos-builder`. Find `my-architecture.md` there. Add a short triage section: what was built, connected adapters, skill path, read-only contract. Show proposed section, get confirmation, write.
 
-**Commit gate.** Suggest committing the skill source. If the learner commits now, set `commit_at_close = "committed"`. If they defer, set `commit_at_close = "deferred"` and tell them to re-run `/pos-triage` after committing to close the block.
+**Commit gate.** Suggest committing the skill source. If the learner commits now, set `commit_at_close = "committed"`. If they defer, set `commit_at_close = "deferred"` and tell them to re-run `/pos-triage` (or `/skill:pos-triage` in Codex) after committing to close the block.
 
 If committed: set `status = "done"`, `completed_at`, recommend next block from the learner's diagnostic route. If deferred: keep `status = "in_progress"`.
 

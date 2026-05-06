@@ -201,7 +201,7 @@ Ask the user to point to one live card and name one visible fact. Re-run the sam
 
 If rebuild: swap scratch into `arch_blocks.dashboard`, delete scratch.
 
-Tell the user: to add panels or rebuild later, run `/pos-dashboard`.
+Tell the user: to add panels or rebuild later, run `/pos-dashboard` (or `/skill:pos-dashboard` in Codex).
 
 Set `status = "done"` only if `config_written` is true. If `config_written` is false, set `status = "incomplete"` and tell the user the agent-config section was not written — offer to complete it before closing.
 

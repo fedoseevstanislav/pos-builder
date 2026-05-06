@@ -100,7 +100,7 @@ On every `/pos-diagnostic` invocation, FIRST check the shared state in this orde
    - Otherwise:
      - Say: «Сначала рекомендую запустить `/pos-intro`: там коротко объясняется, как устроен курс и что будет дальше. Но если хочешь, можем начать диагностику сразу. Что выбираешь — 1 сначала вводная, 2 сразу диагностика?»
      - Check: Wait for `1` or `2`.
-     - `1` → Say: «Ок. Сначала запусти `/pos-intro`, потом возвращайся сюда.» Stop.
+     - `1` → Say: «Ок. Сначала запусти `/pos-intro` (или `/skill:pos-intro` в Codex), потом возвращайся сюда.» Stop.
      - `2` → Begin Phase 1 fresh.
    - Do NOT claim that intro is required for interview data. It is only orientation, not a required source of facts about the learner.
 
